@@ -1,0 +1,864 @@
+/* ------공통하게 쓰이는거------ */
+
+
+* {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+}
+button {
+    outline: none;
+}
+
+#sectionWrap {
+    height: 1450px;
+    position: relative;
+    overflow: hidden;
+    background-color: #ececec;
+    /* background-color: #f7f7f7;
+    z-index: -10; */
+    
+}
+
+.fundBox {
+    /* display: none; */
+    top: -100%;
+    /* bottom: -100%; */
+    transition: 1s;
+    position: absolute;
+    width: 100%
+}
+
+.activity {
+    /* display: block; */
+    top: 0%;
+}
+
+
+.sub-title {
+    margin: 75px 0 0 0;
+    text-align: center;
+}
+
+#dark2 {
+    position: absolute;
+    width: 100%;
+    height: 500px;
+    background-color: #222;
+    z-index: -3;
+    opacity: 0.2;
+}
+
+#darkPage {
+    width: 100%;
+    height: 100%;
+    position: fixed;
+    text-align: center;
+    background-color: rgba(0, 0, 0, 0.4);
+    z-index: 10;
+}
+
+.inputStyle {
+    width: 60%;
+    height: 40px;
+    /*color: #1d1d16;*/
+    font-size: 20px;
+    border: 2px solid #495057;
+    background-color: transparent;
+    display: flex;
+    margin: 0px 15px;
+    padding: 0px 0px 0px 50px;
+    outline: #3b945e;
+    border-radius: 5px;
+  }
+
+
+  .listWrapper {
+    width: 450px;
+    /* display: inline-block; */
+    font-size: 17px;
+    padding: 6px;
+    /* border: 1px solid #777; */
+    border-radius: 10px;
+    box-shadow: 0px 2px 10px 0px gray;
+    margin: 7px 5px;
+    display: inline-block;
+    background-color: #fff;
+    text-align: center;
+  }
+
+  
+  .form-control {
+    width: 300px;
+    height: 35px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 15px;
+    margin: 3px 0;
+  }
+
+  .buttonStyle {
+    width: 110px;
+    height: 30px;
+    background-color: #404040;
+    border: 1px solid #DDD;
+    border-radius: 6px;
+    color: #fff;
+    margin: 10px 0 0 0;
+    transition: .1s;
+    font-weight: bold;
+    cursor: pointer;
+  }
+
+  .buttonStyle:hover {
+    background-color: #212020;
+  }
+
+  .graph {
+      width: 100%;
+      height: 5px;
+      background-color: #222;
+  }
+
+  .graph-bar {
+    width: 0%;
+    height: 5px;
+    background: #8A2387 linear-gradient(to left, #F27121, #E94057, #8A2387);
+
+    /* transition: 2s; */
+  }
+
+  .loginInputs {
+    display: block;
+    margin: 0px auto 25px auto;
+    background-color: rgba(255,255,255,0);
+    border: none;
+    border-bottom: 2px solid #888;
+    border-radius: 0px;
+    outline: none;
+    color: #eee;
+}
+
+.sinUpGuidText {
+    padding: 0 0 0 154px;
+}
+
+
+/* ------공통하게 쓰이는거 끝------ */
+
+
+/* --------헤더----------- */
+#header {
+    max-width:none;
+    min-width: 100%;
+    position: fixed;
+    z-index: 6;
+}
+
+#header-top {
+    height: 44px;
+    font-size: 25px;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+    position: relative;
+    transition: .3s;
+}
+
+#header-bottom-wrap {
+    width: 100%;
+    height: 65px;
+    background-color:rgba(1,1,1,0);
+    transition: .3s;
+    margin-top: -1px;
+}
+
+#header-bottom {
+    background-color: rgba(0,10,0,0);
+    position: relative;
+    width: 1222px;
+    margin: 0 auto;
+    color: #fff;
+}
+
+li {
+    list-style:none;
+}
+
+#nav-wrap {
+    display: flex;
+    width: 600px;
+    justify-content: space-between;
+    position: absolute;
+    right: 10%;
+}
+
+.nav-lists {
+    font-weight: bold;
+    cursor: pointer;
+    /* height: 65.8px; */
+    top: 35%;
+    text-align: center;
+
+}
+
+.nav-lists-a {
+    padding-top: 20px;
+    padding-bottom: 20px;
+    transition: .3s;
+    text-shadow: 1px 1px 1px rgba(0,0,0,.2);
+}
+
+.nav-lists-a:hover {
+    border-top:3px solid #666;
+}
+
+.active {
+    border-top:3px solid #e7212a !important;
+}
+
+#logo {
+    /* color: #333; */
+    cursor: pointer;
+    font-size: 25px;
+    padding: 13px 0 0 30px;
+    display: inline-block;
+    text-shadow: 2px 3px 2px gray;
+}
+
+#colorbar {
+    width: 6em;
+    background-color: #e7212a;
+    visibility: hidden;
+}
+
+#rankTitle {
+    text-align: center;
+    font-size: 30px;
+    font-weight: bold;
+    color: #555;
+    line-height: 1.6;
+}
+
+#rankTitle p {
+  font-size: 15px;
+  font-weight: normal;
+  color: #aaa;
+}
+
+#homeDBtn {
+  width: 150px;
+  height: 40px;
+  background-color: rgba(265, 265,265, 0);
+  border: 2px solid #ea4949;
+  border-radius: 15px;
+  color: #fff;
+  /* font-weight: bold; */
+  font-size: 15px;
+  margin: 43px 0 0 0;
+  cursor: pointer;
+  transition: .3s;
+  outline: none;
+  /* cursor: pointer; */
+}
+
+#homeDBtn:hover {
+    background-color: #ea4949;
+}
+
+.headBtnStyle {
+    /* position: absolute; */
+    right: 160px;
+    margin: 13px 5px;
+    padding: 8px 11px;
+    border: 2px solid #e7212a;
+    border-radius: 15px;
+    color: #fff;
+    cursor: pointer;
+    font-weight: bold;
+    display: none;
+    transition: .3s;
+}
+
+.headBtnStyle:hover {
+    background-color: #e7212a;
+}
+
+
+/* -------헤더 끝--------- */
+
+
+/* -----------메인 페이지----------- */
+
+#rank {
+    width: 1222px;
+    margin: 0 auto;
+}
+
+#rankWrap {
+    width: 926px;
+    /* display: flex; */
+    /* justify-content: space-between; */
+    margin: 50px auto 0 auto;
+    position: relative;
+}
+
+.rankfunds {
+    /* position: absolute; */
+    margin: 300px 0 0 0;
+    width: 250px;
+    height: 250px;
+    border: 3px solid #666;
+    border-radius: 20px;
+    text-align: center;
+    transition: .3s;
+    cursor: pointer;
+    /* background: linear-gradient( to bottom, #fff, #e7212a ); */
+}
+
+#homeimgWrap {
+    position: relative;
+    width: 100%;
+    height: 600px;
+    z-index: 1;
+    background-image: url(images/invest.jpg);
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+#homeimgText {
+    position: relative;
+    font-size: 50px;
+    padding: 152px 0 0 0;
+    color: #fff;
+    z-index: -1;
+    text-align: center;
+    /* font-weight: bold; */
+    margin-bottom: 14px;
+    line-height: 51px;
+    letter-spacing: 2px;
+}
+
+#subText {
+    font-size: 15px;
+    /* color: #5f5959; */
+    color: #fff;
+    opacity: 0.8;
+    line-height: 1.6;
+    margin: 18px 0 0 0;
+}
+#dark {
+    position: absolute;
+    width: 100%;
+    height: 600px;
+    background-color: #222;
+    z-index: -3;
+    opacity: 0.2;
+}
+
+/* -------------메인페이지 끝----------- */
+/* -------------펀드 뷰 시작------------------- */
+#viewFImgWrap {
+    position: relative;
+    width: 100%;
+    height: 500px;
+    z-index: 1;
+    background-image: url(images/handshake.jpg);
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+.fundList1 {
+    display: grid;
+    grid-template-columns: 270px 270px 270px 270px 270px;
+    grid-template-rows: 280px 280px;
+    margin: 0 auto;
+    width: 1350px;
+}
+.viewListWrapper {
+    width: 260px;
+    /* display: inline-block; */
+    font-size: 17px;
+    padding: 6px;
+    /* border: 1px solid #777; */
+    border-radius: 10px;
+    box-shadow: 0px 2px 10px 0px grey;
+    margin: 7px 5px;
+    display: inline-block;
+    background-color: #fff;
+    text-align: center;
+}
+
+.pagination {
+    justify-content: center;
+    display: flex;
+  }
+  
+  .pagination div {
+    width: 30px;
+    height: 30px;
+    font-size: 18px;
+    border: 1px solid #aaa;
+    border-radius: 50%;
+    display: block;
+    text-align: center;
+    margin: 5px;
+    background-color: white;
+    cursor: pointer;
+  }
+  
+  .pagination > div.active {
+    background-color: #00B7FF;
+  }
+  
+  .pagination > div.disable {
+    border-color: #ccc;
+    background-color: #eee;
+    color: #ccc;
+    cursor: default;
+  }
+
+
+/* -------------펀드 뷰 끝-------------------- */
+
+/* -------------펀드추가 시작-------------------- */
+#AddFImgWrap {
+    position: relative;
+    width: 100%;
+    height: 500px;
+    z-index: 1;
+    background-image: url(images/calc.jpg);
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+.Register {
+    text-align: center;
+  }
+  
+  .Register > .regDiv1st {
+    display: inline-block;
+    width: 40%;
+    text-align: right;
+    vertical-align: top;
+    margin-top: 0px;
+  }
+  
+  .Register > .regDiv2nd {
+    display: inline-block;
+    width: 40%;
+  }
+
+  .regFundBox {
+    text-align: left;
+    margin: 0 0 0 20px;
+}
+
+#nowMoney {
+  display: none;
+}
+/* -------------펀드추가 끝-------------------- */
+
+/* -------------투자자목록 시작-------------------- */
+
+#InvestImgWrap {
+    position: relative;
+    width: 100%;
+    height: 500px;
+    z-index: 1;
+    background-image: url(images/stock.jpg);
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+.investorList {
+    display: block;
+    padding: 0px 20px;
+    font-size: 1rem;
+  }
+  
+.investorList > th, #investorInfos > tr {
+border-bottom: 1px solid #ccc;
+}
+  
+/* -------------투자자목록 끝-------------------- */
+/* ----------로그인 시작--------- */
+
+#loginText {
+    /* display: inline-block; */
+    position: absolute;
+    top: 50%;
+	left: 50%;
+    transform: translate( -50%, -50% );
+    box-shadow: 0px 2px 10px 0px grey;
+    width: 1200px;
+    background-color: #fff;
+    height: 700px;
+    display: flex;
+}
+
+#loginGuidText {
+    text-align: center;
+    font-size: 15px;
+}
+
+#loginGuidBtn {
+    width: 87px;
+    height: 22px;
+    border: none;
+    border-radius: 7px;
+    background-color: #333;
+    transition: .3s;
+    color: #fff;
+    cursor: pointer;
+}
+
+#loginGuidBtn:hover {
+    background-color: #444;
+}
+
+
+#lLeftText {
+    width: 40%;
+    height: 100%;
+    padding: 190px 15px 0 0;
+    color: #fff;
+    text-shadow: 1px 1px 1px rgba(0,0,0,.5);
+    text-align: right;
+    font-size: 35px;
+    z-index: 2;
+    /* background-color: #2f2b2b; */
+        /* line-height: 0.6; */
+    background-image: url("/images/story.jpg")
+}
+
+#lLeftText div div {
+    font-size: 15px;
+    line-height: 1.5;
+    padding: 7px 3px 0 0;
+}
+
+#lRightText {
+    width: 60%;
+    height: 100%;
+    right: 0;
+    padding: 190px 0 0 0;
+    color: #fff;
+    text-align: left;
+    font-size: 20px;
+    z-index: 2;
+    background-color: #1c1c1c;
+}
+
+#offBtn {
+    position: absolute;
+    right: 10px;
+    top: 10px;
+    width: 30px;
+    height: 25px;
+    color: #555;
+    font-weight: bolder;
+    /* background-color: #222; */
+    cursor: pointer;
+    z-index: 3;
+}
+
+
+
+/* ---------로그인 끝----------*/
+/* ---------회원가입 시작----------*/
+#signUpText {
+    /* display: inline-block; */
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate( -50%, -50% );
+    box-shadow: 0px 2px 10px 0px grey;
+    width: 608px;
+    background-color: #fff;
+    height: 700px;
+    display: flex;
+}
+
+#lRightText2 {
+    width: 100%;
+    height: 100%;
+    right: 0;
+    padding: 70px 0 0 0;
+    color: #fff;
+    text-align: left;
+    font-size: 20px;
+    z-index: 2;
+    background-color: #1c1c1c;
+}
+
+#signUpTitle {
+    display: block;
+    text-align: center;
+    /* position: absolute; */
+    padding: 46px;
+    color: #fff;
+    font-size: 30px;
+}
+
+.signUpBtn {
+    width: 150px;
+    height: 40px;
+    background-color: rgba(265, 265,265, 0);
+    border: 2px solid #ea4949;
+    border-radius: 15px;
+    color: #fff;
+    /* font-weight: bold; */
+    display: block;
+    font-size: 15px;
+    margin: 43px auto;
+    cursor: pointer;
+    transition: .3s;
+    outline: none;
+    cursor: pointer;
+}
+
+.signUpBtn:hover {
+    background-color: #ea4949;
+}
+
+/* ---------회원가입 끝----------*/
+/* ---------투자하기 시작----------*/
+#pageContents {
+    /* display: inline-block; */
+    position: absolute;
+    top: 50%;
+	left: 50%;
+    transform: translate( -50%, -50% );
+    box-shadow: 0px 2px 10px 0px grey;
+    width: 608px;
+    background-color: #fff;
+    height: 700px;
+    /* display: flex; */
+}
+
+#pageContents input {
+    display: block;
+    margin: 0px auto 25px auto;
+    background-color: rgba(255,255,255,0);
+    border: none;
+    border-bottom: 2px solid #888;
+    border-radius: 0px;
+    outline: none;
+    color: #444;
+    width: 300px;
+    height: 31px;
+    font-size: 20px;
+}
+
+#investPage {
+    position: absolute;
+    transition: .5s;
+    left: -200%;
+    /* display: none; */
+}
+
+.fundBtns {
+    position: absolute;
+    transition: .3s;
+    left: -100%;
+}
+
+#formTitle {
+    margin: 45px 0 20px 0;
+    font-size: 30px;
+}
+
+#canvas {
+    border:1px solid gray;
+}
+
+/* ---------투자하기 끝----------*/
+/* ---------상세보기 시작----------*/
+
+#detailVContents {
+    /* display: inline-block; */
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate( -50%, -50% );
+    box-shadow: 0px 2px 10px 0px grey;
+    width: 888px;
+    background-color: #ffffff;
+    height: 537px;
+    /* display: flex; */
+}
+
+#informationsList {
+    display: grid;
+    grid-template-columns: 25% 25% 25% 25%;
+    grid-template-rows: 25px 70px;
+}
+
+.detailVTexts {
+    display: inline-block;
+    color: #333;
+    font-weight: bold;
+}
+
+#detailIVTorList {
+    position: absolute;
+    right: 65px;
+    top: 184px;
+    width: 335px;
+    height: 337px;
+    text-align: left;
+    overflow-y: scroll;
+    background-color: #c3c3c3;
+}
+
+#detailIVTorList div {
+    height: 75px;
+    line-height: 50px;
+    text-align: left;
+    padding: 11px 0 0 30px;
+    /* border-bottom: 0.2px solid #808080; */
+    background-color: #ffffff;
+    color: #505050;
+    font-size: 21px;
+    /* font-weight: bold; */
+}
+
+#detailVImage {
+    width: 48%;
+    height: 63%;
+    margin: 10px 49px;
+    background-image: url(/images/collabo.jpg);
+    background-size: cover;
+    background-repeat: no-repeat;
+}
+
+#detailVNumber {
+    font-size: 18px;
+}
+
+#detailVTitle {
+    font-size: 28px;
+    padding: 21px;
+}
+
+.detailListTitle {
+    color: #000000;
+    border-right: 1px solid #737272;
+    font-weight: bold;
+}
+
+#detailView {
+    position: absolute;
+    transition: .5s;
+    left: -200%;
+    /* display: none; */
+}
+
+/* ---------상세보기 끝----------*/
+
+  
+
+  /* .fund-circle {
+    margin: 5px 50px;
+    padding: 3px 16px;
+  }
+   */
+
+
+
+
+.fundTexts {
+    padding: 4px 3px 1px 13px;
+    text-align: center;
+    font-size: 17px;
+}
+
+
+
+/* ------푸터-------- */
+
+footer {
+    display: block;
+    /* background: linear-gradient( to bottom, #fff 60%, #c7efcf ); */
+    background-color: #1c1c1c;
+    width: 100%;
+    height: 100px;
+    text-align: center;
+    position: absolute;
+    bottom: 0;
+    color: #444;
+}
+/* ------푸터 끝------ */
+/* -----------토스트 시작 ----------*/
+#toastList {
+	position: fixed;
+	bottom:0;
+	width:100%;
+	display: flex;
+	flex-direction: column;
+	align-items: flex-end;
+    padding:10px 30px;
+    z-index: 20;
+}
+
+.toast {
+	background-color: #e7212a;
+	position: relative;
+	color:#fff;
+	padding:5px 40px;
+	display: flex;
+	align-items: center;
+	height:55px;
+	border-radius: 10px;
+	margin-bottom:10px;
+	transition:all 0.5s;
+}
+
+.toast > .close {
+	position: absolute;
+	top:5px;
+	right:10px;
+	cursor: pointer;
+}
+
+/* ----------토스트 끝 ------------ */
+/* ---------------프로필 시작---------------- */
+
+#leftProfile {
+    width: 40%;
+    height: 100%;
+    padding: 190px 15px 0 0;
+    /* color: #fff; */
+    /* text-shadow: 1px 1px 1px rgba(0,0,0,.5); */
+    text-align: right;
+    font-size: 35px;
+    z-index: 2;
+    /* background-color: #2f2b2b; */
+        /* line-height: 0.6; */
+    /* background-image: url("/images/story.jpg") */
+}
+
+#rightProfile {
+    width: 90%;
+    height: 100%;
+    right: 0;
+    color: #fff;
+    text-align: left;
+    font-size: 20px;
+    z-index: 2;
+    background-color: #1c1c1c;
+}
+
+#profileImg {
+    width: 231px;
+    height: 230px;
+    background-size: cover;
+    background-image: url(/images/profile.png);
+}
+
+#dataTable {
+    width: 100%;
+    height: 100%;
+    overflow-y: scroll;
+}
+
+/* ---------------프로필 끝---------------- */
