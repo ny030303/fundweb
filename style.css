@@ -17,7 +17,6 @@ button {
     background-color: #ececec;
     /* background-color: #f7f7f7;
     z-index: -10; */
-    
 }
 
 .fundBox {
@@ -101,7 +100,7 @@ button {
     width: 110px;
     height: 30px;
     background-color: #404040;
-    border: 1px solid #DDD;
+    border: none;
     border-radius: 6px;
     color: #fff;
     margin: 10px 0 0 0;
@@ -826,15 +825,15 @@ footer {
 #leftProfile {
     width: 40%;
     height: 100%;
-    padding: 190px 15px 0 0;
+    padding: 115px 8px 0 0;
     /* color: #fff; */
     /* text-shadow: 1px 1px 1px rgba(0,0,0,.5); */
     text-align: right;
     font-size: 35px;
     z-index: 2;
-    /* background-color: #2f2b2b; */
-        /* line-height: 0.6; */
-    /* background-image: url("/images/story.jpg") */
+    background-color: #a07a60;
+    /* line-height: 0.6; */
+    /* background-image: url(/images/story.jpg); */
 }
 
 #rightProfile {
@@ -849,9 +848,11 @@ footer {
 }
 
 #profileImg {
-    width: 231px;
-    height: 230px;
+    margin: 13px auto;
+    width: 160px;
+    height: 160px;
     background-size: cover;
+    border-radius: 50%;
     background-image: url(/images/profile.png);
 }
 
@@ -859,6 +860,30 @@ footer {
     width: 100%;
     height: 100%;
     overflow-y: scroll;
+}
+
+.proUserInfo {
+    text-align: center;
+    font-size: 21px;
+    color: #eee;
+}
+
+#proPadding {
+    padding: 30px;
+}
+
+.FdataItem {
+    border: 1px solid #fff;
+    border-radius: 5px;
+    width: 90%;
+    margin: 17px auto;
+}
+
+.FdataImg {
+    width: 160px;
+    height: 160px;
+    background-size: cover;
+    background-image: url(/images/calc.jpg);
 }
 
 /* ---------------프로필 끝---------------- */

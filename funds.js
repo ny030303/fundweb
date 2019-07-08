@@ -1,6 +1,10 @@
 class Funds {
   constructor() {
     this.fundArr = [];
+
+    $.getJSON("fund.json").done(jsvalue => {
+      jsvalue.forEach((value, idx) => this.putFund(value));
+    });
   }
 
   getFundCount() {
@@ -51,7 +55,8 @@ class Funds {
       enddate: newFund.endDate || newFund.enddate,
       total: newFund.total,
       current: newFund.current,
-      percent: Math.floor(100 * newFund.current / newFund.total)
+      percent: Math.floor(100 * newFund.current / newFund.total),
+      owner: newFund.owner
     });
   }
   getFundFromCreator(email) {

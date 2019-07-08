@@ -27,7 +27,6 @@ class Funds {
 
   // 펀드 Percent에 따라 정렬 후 상위 4개만 전달
   getRankFunds() {
-
     let rankArr = [];
    $.getJSON("php/get_rankfunds.php").done(jsRes => {
      if(jsRes.result) {

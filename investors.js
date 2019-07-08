@@ -1,9 +1,27 @@
 class Investors {
   constructor() {
     this.investorArr = [];
+    this.sortType = 0;
+
+    $.getJSON("fund.json").done(jsvalue => {
+        jsvalue.forEach((value, idx) => {
+          value.investorList.forEach(investor => this.putInvestor({
+            number: value.number,
+            email: investor.email,
+            fname: value.name,
+            uname: investor.email,
+            sign: null,
+            total: value.total,
+            money: investor.pay,
+            investtm: new Date(investor.datetime).getTime()
+          }));
+        });
+      });
   }
 
-  
+  setInvestorSortType(type) {
+    this.sortType = type;
+  }
 
   getInvestorCount() {
     return this.investorArr.length;
@@ -16,10 +34,47 @@ class Investors {
     return idx;
   }
 
-  getInvestors(page = 0) {
+  getInvestors(page = 0) {        
+    if( this.sortType == 0 ) {
+      return this.getInvestorsOrderByPercent(page);
+    }
+    else if( this.sortType == 1) {
+      return this.getInvestorsOrderByFundNumber(page);
+    }
+    else if( this.sortType == 2) {
+      return this.getInvestorsOrderByDatetime(page);
+    }
+  }
+
+  getInvestorsOrderByPercent(page = 0) {
+    console.log('getInvestorsOrderByFundNumber() - sortType=', this.sortType);
+    let sortArr = JSON.parse(JSON.stringify(this.investorArr));
+    sortArr.sort((a, b) => a.percent > b.percent ? -1 : 1);
     let retInvestorArr = [];
-    for (let i = page * 10; i < this.investorArr.length && retInvestorArr.length < 10; i++) {
-      retInvestorArr.push(this.investorArr[i]);
+    for (let i = page * 10; i < sortArr.length && sortArr.length < 10; i++) {
+      retInvestorArr.push(sortArr[i]);
+    }
+    return retInvestorArr;
+  }
+  
+  getInvestorsOrderByFundNumber(page = 0) {
+    console.log('getInvestorsOrderByFundNumber() - sortType=', this.sortType);
+    let sortArr = JSON.parse(JSON.stringify(this.investorArr));
+    sortArr.sort((a, b) => a.number < b.number ? -1 : 1);
+    let retInvestorArr = [];
+    for (let i = page * 10; i < sortArr.length && sortArr.length < 10; i++) {
+      retInvestorArr.push(sortArr[i]);
+    }
+    return retInvestorArr;
+  }
+
+  getInvestorsOrderByDatetime(page = 0) {    
+    console.log('getInvestorsOrderByDatetime() - sortType=', this.sortType)
+    let sortArr = JSON.parse(JSON.stringify(this.investorArr));
+    sortArr.sort((a, b) => a.investtm < b.investtm ? -1 : 1);
+    let retInvestorArr = [];
+    for (let i = page * 10; i < sortArr.length && sortArr.length < 10; i++) {
+      retInvestorArr.push(sortArr[i]);
     }
     return retInvestorArr;
   }

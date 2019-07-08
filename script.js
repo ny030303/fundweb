@@ -1,5 +1,6 @@
 // g_FundArr = [];
 g_nFundViewPage = 0;
+g_nInvestorPage = 0;
 
 Number.prototype.toCurrency = function () {
   return Number(this.valueOf()).toLocaleString('kr', 'currency');
@@ -133,6 +134,7 @@ function userInfo() {
     let dataTable = $("#dataTable");
     dataTable.empty();
     if (btnText == 'created') {
+      console.log(g_User);
       g_Funds.getFundFromCreator(g_User.user.email).forEach(fund => {
         dataTable.append(`<div class="FdataItem">
         <div class="FdataImg"></div>
@@ -175,6 +177,11 @@ function userInfo() {
   $("#profile").find("button")[0].click();
 }
 
+function onInvestorListSort(type) {
+  g_Investors.setInvestorSortType(type);
+  $(".nav-lists-a")[3].click();
+}
+
 function userLogout() {
   showAlert("로그아웃 됐습니다.");
   setTimeout(() => window.location.href = "php/logout.php", 300);
@@ -187,6 +194,7 @@ function signInUser() {
 
   // $.getJSON(`php/check_login.php?email=${loginInputs[0].value}&pwd=${loginInputs[1].value}`).done(JsonValue => {
   fetch(`php/check_login.php?email=${loginInputs[0].value}&pwd=${loginInputs[1].value}`).then(value => value.json()).then(JsonValue => {
+
     if (JsonValue.result == 1) {
       putUserName(JsonValue.user.name, 0);
       showAlert(`${JsonValue.user.name}님 로그인 되었습니다.`);
@@ -194,7 +202,7 @@ function signInUser() {
     } else {
       showAlert("옳지 않은 값입니다.")
     }
-  })
+  });
 }
 
 function putUserName(name, num = 1) {
@@ -307,27 +315,29 @@ function animateFundDiv(fundDivId, percent, msec, divnum) {
   });
 }
 
-function makeViewPagination() {
-  let maxPage = Math.floor((g_Funds.getFundCount() + 9) / 10.0);
-  let pageHtml = `<div class="${g_nFundViewPage === 0 ? 'disable' : 'normal'}">＜</div>`;
+function makeViewPagination(fundBox) {
+  let nPage = fundBox.hasClass('view') ? g_nFundViewPage : g_nInvestorPage;
+  let nCount = fundBox.hasClass('view') ? g_Funds.getFundCount() : g_Investors.getInvestorCount();
+  let maxPage = Math.ceil(nCount / 10.0);
+  let pageHtml = `<div class="${nPage === 0 ? 'disable' : 'normal'}">＜</div>`;
   for (let i = 0; i < maxPage; i++) {
-    pageHtml += `<div class="${g_nFundViewPage === i ? 'active-ball' : 'normal'}">${i + 1}</div>`;
+    pageHtml += `<div class="${nPage === i ? 'active-ball' : 'normal'}">${i + 1}</div>`;
   }
-  pageHtml += `<div class="${g_nFundViewPage === maxPage ? 'disable' : 'normal'}">＞</div>`;
+  pageHtml += `<div class="${nPage === (maxPage-1) ? 'disable' : 'normal'}">＞</div>`;
 
-  $('.pagination').html(pageHtml);
+  fundBox.find('.pagination').html(pageHtml);
 
-  $('.pagination > div').on('click', (e) => {
+  fundBox.find('.pagination > div').on('click', (e) => {
     if ($(e.target).hasClass('disable')) return;
     let value = $(e.target).html();
     if (value === '＜') {
-      g_nFundViewPage--;
+      nPage--;
     }
     else if (value === '＞') {
-      g_nFundViewPage++;
+      nPage++;
     }
     else {
-      g_nFundViewPage = Number(value) - 1;
+      nPage = Number(value) - 1;
     }
     $(".nav-lists-a")[1].click();
   });
@@ -351,7 +361,7 @@ function refreshFundBox(fundBox) {
     });
   } else if (fundBox.hasClass('view')) {
 
-    makeViewPagination();
+    makeViewPagination(fundBox);
 
     let fundList1 = document.querySelector(".fundList1");
     $(fundList1).empty();
@@ -406,25 +416,17 @@ function refreshFundBox(fundBox) {
       });
     });
 
-
-
-    // //펀드들 에니메이션 초기화
-    // for(let i = 0; i < g_FundArr.length; i++) {
-    //   console.log(i);
-    //   let percent = Math.floor(100 * g_FundArr[i].current / g_FundArr[i].total);
-    //   let transitionTime = 3 * Math.floor(100 * g_FundArr[i].current / g_FundArr[i].total) / 100; 
-    //   $(`#rankFund${g_FundArr[i].number} .graph-bar`).animate({width: `${percent}%`}, transitionTime*1000);
-
-    //   // animationPercent($(`#rankFund${g_FundArr[i].number} > div.flex-container > div:nth-child(2) > div`), percent, transitionTime);
-    // }
-
-
   } else if (fundBox.hasClass('Register')) {
-    // 
+    let addFundInp = document.querySelectorAll(".form-group .form-control");
+    addFundInp.forEach(element => {
+      element.value = "";
+    })
+    addFundInp[0].value = randomNumber();
   } else if (fundBox.hasClass('investor')) {
+    makeViewPagination(fundBox);
     let investBody = $("#investorInfos");
     investBody.empty();
-    g_Investors.getInvestors().forEach(value => {
+    g_Investors.getInvestors(g_nInvestorPage).forEach(value => {
       investBody.append(`<tr>
       <td width="100px">${value.number}</td>
       <td width="40%">${value.fname}</td>
@@ -456,30 +458,6 @@ window.onload = function () {
   let navATag = $(".nav-lists-a");
 
   pages = ['mainScreen', 'view', 'Register', 'investor', 'login', 'signUp'];
-
-
-  // getJsonFund((jsvalue) => {
-
-  //   // let a = jsvalue[0].endDate.replace("-", "");
-  //   // console.log(a);
-  //   // console.log(Date.now());
-  //   // jsvalue[1].number;
-  //   g_FundArr = jsvalue;
-
-
-  //   jsvalue.forEach((value, idx) => {
-  //     g_Funds.putFund(value);
-  //     value.investorList.forEach(investor => g_Investors.putInvestor({
-  //       number: value.number,
-  //       email: investor.email,
-  //       fname: value.name,
-  //       uname: investor.email,
-  //       sign: null,
-  //       total: value.total,
-  //       money: investor.pay,
-  //     }));
-  //   });
-  // });
 
   navATag.on("click", function (e) {
     pages.forEach((sectionName, i) => {
@@ -548,35 +526,50 @@ window.onload = function () {
 
   let addFundInp = document.querySelectorAll(".form-group .form-control");
   addFundInp[0].value = randomNumber();
-  // console.log(addFundInp[0].value);
+
+  $(addFundInp).keyup(function (e)  {
+    addFundInp.forEach(value => {
+      $(value).css({border:"1px solid #ccc"});
+    })
+
+    if (new Date(addFundInp[2].value).getTime() <= new Date().getTime()) {
+      showAlert("지난 날짜는 추가할 수 없습니다.");
+      $(addFundInp[2]).css({border:"2px solid #e7212a"});
+    }
+
+    if(addFundInp[4].value.length > 500) {
+      showAlert("500자를 초과할 수 없습니다.");
+      $(addFundInp[4]).css({border:"2px solid #e7212a"});
+    }
+  });
+
   $("#addFundBtn").on("click", function () {
     if (addFundInp[1].value == "" || addFundInp[2].value == "" || addFundInp[3].value == "" || addFundInp[4].value == "") {
       showAlert("값이 비었습니다.")
-    }
+      $(addFundInp[1]).css({border:"2px solid #e7212a"});
+      $(addFundInp[2]).css({border:"2px solid #e7212a"});
+      $(addFundInp[3]).css({border:"2px solid #e7212a"});
+      $(addFundInp[4]).css({border:"2px solid #e7212a"});
+    } else if(new Date(addFundInp[2].value).getTime() <= new Date().getTime()) {
+      showAlert("지난 날짜는 추가할 수 없습니다.");
+      $(addFundInp[2]).css({border:"2px solid #e7212a"});
+    } else if(addFundInp[4].value.length > 500) {
 
-    console.log(new Date(addFundInp[2].value).getTime(), new Date().getTime());
-    if (new Date(addFundInp[2].value).getTime() <= new Date().getTime()) {
-      showAlert("지난 날짜는 추가할 수 없습니다.")
-    }
-
-    g_Funds.putFund( {
+    } else {
+      g_Funds.putFund( {
       number: addFundInp[0].value,
       name: addFundInp[1].value,
       enddate: addFundInp[2].value.replace("T", " "),
       total: parseInt(addFundInp[3].value),
       memo: parseInt(addFundInp[4].value),
       image: $('.regDiv1st > img').attr('src')
-    });
+      });
 
-    showAlert("추가 됐습니다.");
-    $(".nav-lists-a")[1].click();
-
-    console.log(addFundInp[2].value);
+      showAlert("추가 됐습니다.");
+      $(".nav-lists-a")[1].click();
+      console.log(addFundInp[2].value);
+    }
   })
-
-
-
-
 
   let user = g_User.getUser();
   console.log(user);

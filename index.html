@@ -238,6 +238,13 @@
             </div>
             <h1 class="sub-title subtitle-img3"></h1>
             <div class="investorList">
+                <div>
+                    <ul>
+                        <li class="buttonStyle" onclick="onInvestorListSort(0)">펀드지분순</li>
+                        <li class="buttonStyle" onclick="onInvestorListSort(1)">펀드번호순</li>
+                        <li class="buttonStyle" onclick="onInvestorListSort(2)">투자시간순</li>
+                    </ul>
+                </div>
                 <table style="border: 1px solid #ccc; width: 100%">
                     <thead>
                         <tr>
@@ -252,6 +259,11 @@
                     <tbody id="investorInfos">
                     </tbody>
                 </table>
+            </div>
+            <div class="pagination">
+                <div>＜</div>
+                <div>1</div>
+                <div>＞</div>
             </div>
         </section>
 
@@ -357,9 +369,10 @@
                         <div id="dark3"></div>
                         <div id="">
                             <div id="profileImg"></div>
-                            <div>Email</div>
-                            <div>name</div>
-                            <div>money</div>
+                            <div class="proUserInfo">Email</div>
+                            <div class="proUserInfo">name</div>
+                            <div class="proUserInfo">money</div>
+                            <div id="proPadding"></div>
                             <button class="buttonStyle">created</button>
                             <button class="buttonStyle">invested</button>
                             <button class="buttonStyle">completed</button>
@@ -395,12 +408,11 @@
         </div>
     </div>
 </body>
-<script src="jquery-1.12.3.min.js"></script>
-<script src="jquery-ui-1.11.4/jquery-ui.js"></script>
-<!-- <script src="investors.js"></script>
-<script src="funds.js"></script> -->
-<script src="investors_DB.js"></script>
-<script src="funds_DB.js"></script>
+<script src="jquery-3.4.1.js"></script>
+<script src="investors.js"></script>
+<script src="funds.js"></script>
+<!-- <script src="investors_DB.js"></script>
+<script src="funds_DB.js"></script> -->
 <script src="User.js"></script>
 <script src="script.js"></script>
 
