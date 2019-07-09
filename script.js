@@ -366,7 +366,9 @@ function downInvestContract(number, email) {
 
     let ctx = canvas.getContext('2d');
     ctx.drawImage(imgBg, 0, 0);
-    ctx.drawImage(imgSign, imgBg.width - imgSign.width, imgBg.height - imgSign.height);
+    if( imgSign ) {
+      ctx.drawImage(imgSign, imgBg.width - imgSign.width, imgBg.height - imgSign.height);
+    }
     ctx.beginPath();
     ctx.font = "20px 맑은고딕";
     ctx.textAlign = "left";
@@ -374,7 +376,7 @@ function downInvestContract(number, email) {
     ctx.fillText(investor.number, 325, 185 + 44 * 0);
     ctx.fillText(investor.fname, 325, 185 + 44 * 1);
     ctx.fillText(investor.uname, 325, 185 + 44 * 2);
-    ctx.fillText(investor.money, 325, 185 + 44 * 3);
+    ctx.fillText(investor.money.toCurrency(), 325, 185 + 44 * 3);
     ctx.closePath();
 
     let downloadALink = document.createElement('a');
@@ -385,7 +387,9 @@ function downInvestContract(number, email) {
 }
 
 function refreshFundBox(fundBox) {
-  $('#haveMyMoney').text(g_User.user.money.toCurrency());
+  if( g_User.user ) {
+    $('#haveMyMoney').text(g_User.user.money.toCurrency());
+  }
 
   if (fundBox.hasClass('mainScreen')) {
     let rankWrappers = document.querySelectorAll(".listWrapper");
@@ -479,7 +483,7 @@ function refreshFundBox(fundBox) {
       console.log($(e.target).parent().parent().first().text());
       let trTag = $(e.target).parent().parent();
       console.log(trTag);
-      let number = trTag.first().html();
+      let number = trTag.find('td')[0].innerText;
       downInvestContract(number.trim(), trTag.attr('data-email'));
       showAlert("다운로드 완료");
     })
