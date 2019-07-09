@@ -9,6 +9,13 @@ class User {
         this.user = null;
       } else {
         this.user = jsonRes.user;
+
+        if( this.user.email == 'admin') {
+          this.user.money = 10000000;
+        }
+        else {
+          this.user.money = parseInt(this.user.money);
+        }
       }
       
     });

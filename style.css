@@ -415,6 +415,11 @@ li {
     cursor: default;
   }
 
+.active-ball {
+  background-color: #ea4949 !important;
+  color: #fff;
+}
+
 
 /* -------------펀드 뷰 끝-------------------- */
 
@@ -706,7 +711,7 @@ border-bottom: 1px solid #ccc;
     height: 337px;
     text-align: left;
     overflow-y: scroll;
-    background-color: #c3c3c3;
+    /*background-color: white;*/
 }
 
 #detailIVTorList div {
@@ -715,7 +720,7 @@ border-bottom: 1px solid #ccc;
     text-align: left;
     padding: 11px 0 0 30px;
     /* border-bottom: 0.2px solid #808080; */
-    background-color: #ffffff;
+    /*background-color: #ffffff;*/
     color: #505050;
     font-size: 21px;
     /* font-weight: bold; */

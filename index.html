@@ -5,8 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>펀드 웹 페이지</title>
-    <link rel="stylesheet" href="jquery-ui-1.11.4/themes/start/jquery-ui.css">
+    <title>KickStarter Fund Web Page</title>
     <link type="text/css" rel="stylesheet" href="style.css">
 </head>
 
@@ -14,6 +13,7 @@
     <div id="sectionWrap">
         <section id="header">
             <div id="header-top">
+                <div id="haveMyMoney" style="float: right"></div>
             </div>
             <div id="header-bottom-wrap">
                 <div id="header-bottom">
@@ -56,7 +56,7 @@
                 <div id="dark"></div>
                 <div id="homeimgText">Welcome To <span>KickStarter.</span><br>
                     <p id="subText">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor </p>
-                    <button id="homeDBtn" onclick="GoToAddFund()"> Go to add Fund.</button>
+                    <button id="homeDBtn" onclick="gotoSectionPage('AddFund')"> Go to add Fund.</button>
                 </div>
             </div>
             <div id="contents">
@@ -289,7 +289,7 @@
                         <input class="form-control loginInputs" id="" type="text">
                         <button class="signUpBtn" onclick="signInUser()">LOGIN</button>
                         <p id="loginGuidText">Don't have an account? <button id="loginGuidBtn"
-                                onclick="goToSignUp()">SIGN UP</button></p>
+                                onclick="gotoSectionPage('SignUp')">SIGN UP</button></p>
                     </div>
                 </div>
             </div>
@@ -325,7 +325,7 @@
                     <input type="number" placeholder="투자금액">
                     <canvas id="canvas" width="500" height="300"></canvas>
                     <button class="buttonStyle" onclick="investFund()">투자</button>
-                    <button class="buttonStyle" onclick="OffInvestPage()">취소</button>
+                    <button class="buttonStyle" onclick="closePopupSection('#investPage')">취소</button>
                 </div>
             </div>
         </section>
@@ -333,7 +333,7 @@
         <section id="detailView" class="fundBtns">
             <div id="darkPage">
                 <div id="detailVContents">
-                    <div id="offBtn" onclick="OffDetailView()">X</div>
+                    <div id="offBtn" onclick="closePopupSection('#detailView')">X</div>
                     <div class="detailVTexts" id="detailVNumber">A0495</div>
                     <div class="detailVTexts" id="detailVTitle">환경 친화적인 비닐개발</div>
 
@@ -364,7 +364,7 @@
         <section id="profile" class="fundBtns">
             <div id="darkPage">
                 <div id="loginText">
-                    <div id="offBtn" onclick="offProFile()">X</div>
+                    <div id="offBtn" onclick="closePopupSection('#profile')">X</div>
                     <div id="leftProfile">
                         <div id="dark3"></div>
                         <div id="">
