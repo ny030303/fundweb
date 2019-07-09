@@ -462,7 +462,6 @@ function refreshFundBox(fundBox) {
     let addFundInp = document.querySelectorAll(".form-group .form-control");
     addFundInp.forEach(element => element.value = "");
     addFundInp[0].value = randomNumber();
-
   }
   else if (fundBox.hasClass('investor')) {
     makePagination(fundBox);

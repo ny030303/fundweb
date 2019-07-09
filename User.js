@@ -8,6 +8,11 @@ class User {
   }
 
   getUser() {
+    // return this.user;
+    return this.getUserFromDB();
+  }
+
+  getUserFromDB() {
     $.getJSON("php/check_login.php").done(jsonRes => {
       if(jsonRes.result == 0) {
         this.user = null;
