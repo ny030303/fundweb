@@ -7,7 +7,7 @@ Number.prototype.toCurrency = function () {
 
 Date.prototype.toMyDateString = function() {
   return this.toISOString().substr(0, '0000-00-00 00:00:00'.length).replace('T', ' ');
-}
+};
 
 function showAlert(msg) {
 
@@ -199,7 +199,6 @@ function userLogout() {
 
 }
 
-
 function signInUser() {
   let loginInputs = $(".loginInputs");
 
@@ -252,11 +251,6 @@ function signUpUser() {
     }
   })
 }
-
-function logOut() {
-
-}
-
 
 function detailPopup(e) {
   let parent = $(e.target).parent();
@@ -343,7 +337,55 @@ function makePagination(fundBox) {
   });
 }
 
+function downInvestContract(number, email) {
+  let imgBg = new Image;
+  let imgSign = null;
+  let imageLoadCnt = 0;
+  let investor = g_Investors.getInvestor(number, email);
+  console.log('downInvestContract()', number, email);
+
+  if (investor.sign) { // 투자자 싸인이 있는 경우
+    imgSign = new Image;
+    imgSign.src = investor.sign;
+    imgSign.onload = () => clickContract(++imageLoadCnt);
+  }
+  else { // 초기값 입력으로 투자자의 싸인이 없는 경우
+    imageLoadCnt++; // 처리된 것으로 해야 클릭 처리를 진행함.
+  }
+
+  imgBg.src = 'images/funding.png';
+  imgBg.onload = () => clickContract(++imageLoadCnt);
+
+  function clickContract(imgCnt) {
+    if (imgCnt < 2) return;
+
+    console.log('imgCnt:', imgCnt, `[${imgBg.width}, ${imgBg.width}]`);
+    let canvas = document.createElement('canvas');
+    canvas.width = imgBg.width;
+    canvas.height = imgBg.height;
+
+    let ctx = canvas.getContext('2d');
+    ctx.drawImage(imgBg, 0, 0);
+    ctx.drawImage(imgSign, imgBg.width - imgSign.width, imgBg.height - imgSign.height);
+    ctx.beginPath();
+    ctx.font = "20px 맑은고딕";
+    ctx.textAlign = "left";
+    ctx.fillStyle = "#31333B";
+    ctx.fillText(investor.number, 325, 185 + 44 * 0);
+    ctx.fillText(investor.fname, 325, 185 + 44 * 1);
+    ctx.fillText(investor.uname, 325, 185 + 44 * 2);
+    ctx.fillText(investor.money, 325, 185 + 44 * 3);
+    ctx.closePath();
+
+    let downloadALink = document.createElement('a');
+    downloadALink.download = 'InvestContract.png';
+    downloadALink.href = canvas.toDataURL('image/png');
+    downloadALink.click();
+  }
+}
+
 function refreshFundBox(fundBox) {
+  $('#haveMyMoney').text(g_User.user.money.toCurrency());
 
   if (fundBox.hasClass('mainScreen')) {
     let rankWrappers = document.querySelectorAll(".listWrapper");
@@ -370,12 +412,8 @@ function refreshFundBox(fundBox) {
 
       let divTag = document.createElement('div');
       divTag.innerHTML = `<div id="viewFund${value.number}" class="viewListWrapper">
-                            <div class="graph">
-                              <div class="graph-bar"></div>
-                            </div>
-                            <div class="form-control1 text-sz1-b" style="
-                            font-weight: bold;
-                        ">${value.number}</div>
+                            <div class="graph"><div class="graph-bar"></div></div>
+                            <div class="form-control1 text-sz1-b" style="font-weight: bold;">${value.number}</div>
                             <div class="fundTexts">${value.name}</div>
                             <div class="fundTexts">${value.enddate}</div>
                             <div class="flex-container">
@@ -389,8 +427,7 @@ function refreshFundBox(fundBox) {
                                 </div>
                             </div>
                             <button class="buttonStyle investPageBtn">투자하기</button>
-                            <button class="buttonStyle detailViewBtn">상세보기 </button>
-                            
+                            <button class="buttonStyle detailViewBtn">상세보기 </button>                            
                         </div>`;
       fundList1.appendChild(divTag);
       let transitionTime = 3 * Math.floor(value.percent) / 100;
@@ -428,7 +465,7 @@ function refreshFundBox(fundBox) {
     let investBody = $("#investorInfos");
     investBody.empty();
     g_Investors.getInvestors().forEach(value => {
-      investBody.append(`<tr>
+      investBody.append(`<tr data-email="${value.email}">
       <td width="100px">${value.number}</td>
       <td width="40%">${value.fname}</td>
       <td width="130px">${value.uname}</td>
@@ -439,7 +476,11 @@ function refreshFundBox(fundBox) {
       </tr>`);
     });
     investBody.find("button").on("click", e => {
-      // $(e.target).parent().parent().firstChild
+      console.log($(e.target).parent().parent().first().text());
+      let trTag = $(e.target).parent().parent();
+      console.log(trTag);
+      let number = trTag.first().html();
+      downInvestContract(number.trim(), trTag.attr('data-email'));
       showAlert("다운로드 완료");
     })
   }
@@ -492,7 +533,49 @@ function initSignCanvas(canvas) {
   document.onmouseup = eventListener;
 }
 
+function injectPaginationToClass() {
+  // prototype 메소드 같은 function으로 만들어서 기존 prototype에 통합하는 방법
+  let pageFuntions = {
+      getPageCount: function() {
+        return Math.floor((this.getCount() + this.divide - 1) / this.divide);
+      },
+      getPage: function() {
+        return  this.nPage;
+      },
+      setPage: function(page) {
+        this.nPage = page;
+        if( this.nPage < 0 ) {
+          this.nPage = 0;
+        }
+        if( this.nPage >= this.getPageCount() ) {
+          this.nPage = this.getPageCount() - 1;
+        }
+      }
+  };
+  Funds.prototype = Object.assign(Funds.prototype, pageFuntions);
+  Investors.prototype = Object.assign(Investors.prototype, pageFuntions);
+
+  // prototype에 직접 연결하는 방법
+  // Investors.prototype.getPageCount = Funds.prototype.getPageCount = function() {
+  //   return Math.floor((this.getCount() + this.divide - 1) / this.divide);
+  // };
+  // Investors.prototype.getPage = Funds.prototype.getPage = function() {
+  //   return  this.nPage;
+  // };
+  // Investors.prototype.setPage = Funds.prototype.setPage = function(page) {
+  //   this.nPage = page;
+  //   if( this.nPage < 0 ) {
+  //     this.nPage = 0;
+  //   }
+  //   if( this.nPage >= this.getPageCount() ) {
+  //     this.nPage = this.getPageCount() - 1;
+  //   }
+  // };
+}
+
 window.onload = function () {
+  injectPaginationToClass();
+
   $.ajaxSetup({async: false});
   $('input').attr('maxlength', 100);
   $('textarea').attr('maxlength', 500);
@@ -518,9 +601,9 @@ window.onload = function () {
 
   $(window).on("scroll", function (e) {
     let nowWTop = parseInt($(window).scrollTop());
-    let nowWHeight = parseInt($(window).height());
-    // console.log(nowWTop, nowWHeight)
-    if (nowWTop >= 1) {
+    // let nowWHeight = parseInt($(window).height());
+    // console.log(nowWTop, nowWHeight);
+    if (nowWTop >= 1 ) {
       $("#header-top").css({height: "0px"});
       $("#header").css({backgroundColor: "rgba(1,1,1,0)"});
       $("#header-bottom-wrap").css({backgroundColor: "#fff"});
@@ -562,7 +645,7 @@ window.onload = function () {
   $("#addFundBtn").on("click", function () {
     let bInputIsNull = false;
     [1, 2, 3, 4].forEach(idx => {
-      if (addFundInp[idx].value == "" ) {
+      if (!addFundInp[idx].value) {
         $(addFundInp[idx]).css({border: "2px solid #e7212a"});
         bInputIsNull = true;
       }
@@ -587,9 +670,8 @@ window.onload = function () {
         image: $('.regDiv1st > img').attr('src')
       });
 
-      showAlert("추가 됐습니다.");
+      showAlert(`'${addFundInp[1].value}' 펀드가 추가 되었습니다.`);
       gotoSectionPage('View');
-      console.log(addFundInp[2].value);
     }
   });
 

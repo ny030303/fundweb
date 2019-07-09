@@ -2,31 +2,14 @@ class Funds {
   constructor() {
     this.fundArr = [];
     this.nPage = 0;
+    this.divide = 10.0;
 
     $.getJSON("fund.json").done(jsvalue => {
       jsvalue.forEach((value, idx) => this.putFund(value));
     });
   }
 
-  getPage() {
-    return this.nPage;
-  }
-
-  setPage(page) {
-    this.nPage = page;
-    if( this.nPage < 0 ) {
-      this.nPage = 0;
-    }
-    if( this.nPage > this.getMaxPage() ) {
-      this.nPage = this.getMaxPage();
-    }
-  }
-
-  getPageCount() {
-    return Math.floor((this.getFundCount() + 9) / 10.0);
-  }
-
-  getFundCount() {
+  getCount() {
     return this.fundArr.length;
   }
 

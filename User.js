@@ -1,6 +1,10 @@
 class User {
   constructor() {
-     this.user = null;
+     this.user = {
+       email: 'admin',
+       name: '홍길동',
+       money: 5000000
+     };
   }
 
   getUser() {
@@ -11,13 +15,12 @@ class User {
         this.user = jsonRes.user;
 
         if( this.user.email == 'admin') {
-          this.user.money = 10000000;
+          this.user.money = 5000000;
         }
         else {
           this.user.money = parseInt(this.user.money);
         }
       }
-      
     });
     return this.user;
   }

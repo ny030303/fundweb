@@ -3,6 +3,7 @@ class Investors {
     this.investorArr = [];
     this.sortType = 0;
     this.nPage = 0;
+    this.divide = 5.0;
 
     $.getJSON("fund.json").done(jsvalue => {
       jsvalue.forEach((value, idx) => {
@@ -20,30 +21,12 @@ class Investors {
     });
   }
 
-  getPage() {
-    return this.nPage;
-  }
-
-  setPage(page) {
-    this.nPage = page;
-    if( this.nPage < 0 ) {
-      this.nPage = 0;
-    }
-    if( this.nPage >= this.getPageCount() ) {
-      this.nPage = this.getPageCount() - 1;
-    }
-  }
-
-  getPageCount() {
-    return Math.floor((this.getInvestorCount() + 4) / 5.0);
-  }
-
   setInvestorSortType(type) {
     this.sortType = type;
     this.nPage = 0;
   }
 
-  getInvestorCount() {
+  getCount() {
     return this.investorArr.length;
   }
 
