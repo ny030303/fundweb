@@ -239,9 +239,9 @@
             <div class="investorList">
                 <div>
                     <ul>
-                        <li class="buttonStyle" onclick="onInvestorListSort(0)">펀드지분순</li>
-                        <li class="buttonStyle" onclick="onInvestorListSort(1)">펀드번호순</li>
-                        <li class="buttonStyle" onclick="onInvestorListSort(2)">투자시간순</li>
+                        <li class="buttonStyle" onclick="onInvestorListSort(0)">최근등록순</li>
+                        <li class="buttonStyle" onclick="onInvestorListSort(1)">펀드별</li>
+                        <li class="buttonStyle" onclick="onInvestorListSort(2)">개인별</li>
                     </ul>
                 </div>
                 <table style="border: 1px solid #ccc; width: 100%">
@@ -252,6 +252,7 @@
                             <th width="130px">투자자명</th>
                             <th width="100px">투자금액</th>
                             <th width="250px">펀드지분</th>
+                            <th width="250px">투자일시</th>
                             <th width="100px">펀드계약서</th>
                         </tr>
                     </thead>
@@ -366,7 +367,7 @@
                     <div id="offBtn" onclick="closePopupSection('#profile')">X</div>
                     <div id="leftProfile">
                         <div id="dark3"></div>
-                        <div id="">
+                        <div id="profileBody">
                             <div id="profileImg"></div>
                             <div class="proUserInfo">Email</div>
                             <div class="proUserInfo">name</div>

@@ -5,24 +5,34 @@ class Investors {
     this.nPage = 0;
     this.divide = 5.0;
 
-    $.getJSON("fund.json").done(jsvalue => {
-      jsvalue.forEach((value, idx) => {
-        value.investorList.forEach(investor => this.putInvestor({
-          number: value.number,
-          email: investor.email,
-          fname: value.name,
-          uname: investor.email,
-          sign: null,
-          total: value.total,
-          money: investor.pay,
-          investtm: new Date(investor.datetime).getTime()
-        }));
+    let loadData = localStorage.getItem('investorArr');
+    if( loadData ) {
+      this.investorArr = JSON.parse(loadData);
+    }
+    else {
+      $.getJSON("fund.json").done(jsvalue => {
+        jsvalue.forEach((value, idx) => {
+          value.investorList.forEach(investor => this.putInvestor({
+            number: value.number,
+            email: investor.email,
+            fname: value.name,
+            uname: null,
+            sign: null,
+            total: value.total,
+            money: investor.pay,
+            investtm: new Date(investor.datetime).getTime()
+          }));
+        });
       });
-    });
+    }
+  }
+
+  saveLocalData() {
+    localStorage.setItem('investorArr', JSON.stringify(this.investorArr));
   }
 
   setInvestorSortType(type) {
-    this.sortType = type;
+    this.sortType = type; // 0: 최근등록순, 1: 펀드별, 2: 개인별
     this.nPage = 0;
   }
 
@@ -30,24 +40,17 @@ class Investors {
     return this.investorArr.length;
   }
 
-  findInvestor(fundNumber, userEmail) {
-    let idx = this.investorArr.findIndex(investor => {
-      return (investor.number === fundNumber && investor.email === userEmail)
-    });
-    return idx;
-  }
-
   getInvestors() {
     let sortArr = JSON.parse(JSON.stringify(this.investorArr));
     switch (this.sortType) {
-      case 0:
-        sortArr.sort((a, b) => a.percent > b.percent ? -1 : 1);
+      case 0: // 최근등록순
+        sortArr.sort((a, b) => a.investtm > b.investtm ? -1 : 1);
         break;
-      case 1:
+      case 1: // 펀드별
         sortArr.sort((a, b) => a.number < b.number ? -1 : 1);
         break;
-      case 2:
-        sortArr.sort((a, b) => a.investtm > b.investtm ? -1 : 1);
+      case 2: // 개인별
+        sortArr.sort((a, b) => a.email > b.email ? -1 : 1);
         break;
     }
     let retInvestorArr = [];
@@ -57,29 +60,29 @@ class Investors {
     return retInvestorArr;
   }
 
-  putInvestor(newInvestor) {
-    let idx = this.findInvestor(newInvestor.number, newInvestor.email);
+  putInvestor(investor) {
+    let idx = this.investorArr.findIndex(v => v.number == investor.number && v.email ==investor.email);
     if (idx >= 0) {
-      newInvestor.money += this.investorArr[idx].money;
-      newInvestor = Object.assign(this.investorArr[idx], newInvestor);
+      investor.money += this.investorArr[idx].money;
+      investor = Object.assign(this.investorArr[idx], investor);
       this.investorArr.splice(idx, 1);
     }
     this.investorArr.push({
-      number: newInvestor.number,
-      email: newInvestor.email,
-      fname: newInvestor.fname,
-      uname: newInvestor.uname,
-      sign: newInvestor.sign,
-      total: newInvestor.total,
-      money: newInvestor.money,
-      percent: Math.floor(100 * newInvestor.money / newInvestor.total),
-      investtm: newInvestor.investtm || (new Date().getTime())
+      number: investor.number,
+      email: investor.email,
+      fname: investor.fname,
+      uname: investor.uname,
+      sign: investor.sign,
+      total: investor.total,
+      money: investor.money,
+      percent: Math.floor(100 * investor.money / investor.total),
+      investtm: investor.investtm || (new Date().getTime())
     });
     this.investorArr.sort((a, b) => a.createtm > b.createtm ? -1 : 1);
   }
 
-  getInvestor(fundNumber, userEmail) {
-    let idx = this.findInvestor(fundNumber, userEmail);
+  getInvestor(number, email) {
+    let idx = this.investorArr.findIndex(v => v.number == number && v.email == email);
     return idx < 0 ? null : this.investorArr[idx];
   }
 
@@ -102,6 +105,15 @@ class Investors {
       }
     });
     return retArr;
+  }
+
+  // C모듈 기능
+  deleteFund(number) {
+    for( let i = this.investorArr.length-1; i>=0; i--) {
+      if (this.investorArr[i].number == number) {
+        this.investorArr.splice(i, 1);
+      }
+    }
   }
 }
 

@@ -10,7 +10,6 @@ Date.prototype.toMyDateString = function() {
 };
 
 function showAlert(msg) {
-
   let toastContainer = document.querySelector("#toastList");
   let div = document.createElement("div");
   div.classList.add("toast");
@@ -32,7 +31,6 @@ function showAlert(msg) {
     }, 700);
   });
   toastContainer.appendChild(div);
-
 }
 
 function investFund() {
@@ -109,7 +107,7 @@ function selectFundImage() {
 }
 
 function closePopupSection(popupSectionId) {
-  $(popupSectionId).css({left: "-200%"});
+  $(popupSectionId).css({left: "-300%"});
 }
 
 function gotoSectionPage(title) {
@@ -137,7 +135,23 @@ function clickOffFund2() {
 }
 
 function userInfo() {
+  let FdataItemHtml = (fund) => {
+    return `<div class="FdataItem" style="display: table;">
+              <div class="FdataImg" style="float: left; width: 25%; margin: 1px"></div>
+              <div style="float: left; width: 74%; padding: 0px 0px 0px 14px;">
+                <div>펀드번호: ${fund.number}</div>
+                <div>펀드이름: ${fund.name}</div>
+                <div>모집기한: ${fund.enddate}</div>
+                <div>모집금액: ${fund.current.toCurrency()} / ${fund.total.toCurrency()}  (모집율: ${fund.percent}%)</div>
+              </div>
+            </div>`;
+  };
   $("#profile").css({left: "0"});
+
+  $('#profileBody > .proUserInfo')[0].innerHTML = g_User.user.email;
+  $('#profileBody > .proUserInfo')[1].innerHTML = g_User.user.name;
+  $('#profileBody > .proUserInfo')[2].innerHTML = g_User.user.money.toCurrency();
+
   $("#profile").find("button").on("click", e => {
     let btnText = $(e.target).text();
     let dataTable = $("#dataTable");
@@ -145,43 +159,19 @@ function userInfo() {
     if (btnText == 'created') {
       console.log(g_User);
       g_Funds.getFundFromCreator(g_User.user.email).forEach(fund => {
-        dataTable.append(`<div class="FdataItem">
-        <div class="FdataImg"></div>
-          <div>${fund.number}</div>
-          <div>${fund.name}</div>
-          <div>${fund.enddate}</div>
-          <div>${fund.total}</div>
-          <div>${fund.current}</div>
-          <div>${fund.percent}</div>
-      </div>`);
+        dataTable.append(FdataItemHtml(fund));
       })
 
     }
     else if (btnText == 'invested') {
       g_Investors.getFundNumbersFromInvestor(g_User.user.email).forEach(number => {
         let fund = g_Funds.getFund(number);
-        dataTable.append(`<div class="FdataItem">
-          <div class="FdataImg"></div>
-            <div>${fund.number}</div>
-            <div>${fund.name}</div>
-            <div>${fund.enddate}</div>
-            <div>${fund.total}</div>
-            <div>${fund.current}</div>
-            <div>${fund.percent}</div>
-          </div>`);
+        dataTable.append(FdataItemHtml(fund));
       });
     }
     else if (btnText == 'completed') {
       g_Funds.getFundFromComplete(g_User.user.email).forEach(fund => {
-        dataTable.append(`<div class="FdataItem">
-          <div class="FdataImg"></div>
-            <div>${fund.number}</div>
-            <div>${fund.name}</div>
-            <div>${fund.enddate}</div>
-            <div>${fund.total}</div>
-            <div>${fund.current}</div>
-            <div>${fund.percent}</div>
-          </div>`);
+        dataTable.append(FdataItemHtml(fund));
       });
     }
   });
@@ -196,24 +186,18 @@ function onInvestorListSort(type) {
 function userLogout() {
   showAlert("로그아웃 됐습니다.");
   setTimeout(() => window.location.href = "php/logout.php", 300);
-
 }
 
 function signInUser() {
   let loginInputs = $(".loginInputs");
-
-  // $.getJSON(`php/check_login.php?email=${loginInputs[0].value}&pwd=${loginInputs[1].value}`).done(JsonValue => {
-  fetch(`php/check_login.php?email=${loginInputs[0].value}&pwd=${loginInputs[1].value}`).then(value => value.json()).then(JsonValue => {
-
-    if (JsonValue.result == 1) {
-      putUserName(JsonValue.user.name, 0);
-      showAlert(`${JsonValue.user.name}님 로그인 되었습니다.`);
-      gotoSectionPage('Home');
-    }
-    else {
-      showAlert("옳지 않은 값입니다.")
-    }
-  });
+  if( g_User.getUser(loginInputs[0].value, loginInputs[1].value) ) {
+    putUserName(g_User.user.name, 0);
+    showAlert(`${g_User.user.name}님 로그인 되었습니다.`);
+    gotoSectionPage('Home');
+  }
+  else {
+    showAlert("옳지 않은 값입니다.")
+  }
 }
 
 function putUserName(name, num = 1) {
@@ -240,16 +224,13 @@ function putUserName(name, num = 1) {
 function signUpUser() {
   let inputs = $("#lRightText2 > .loginInputs");
 
-  console.log(inputs[0].value, inputs[1].value, inputs[2].value, inputs[3].value);
-  fetch(`php/create_user.php?email=${inputs[0].value}&name=${inputs[1].value}&pwd=${inputs[2].value}`).then(value => value.json()).then(JsonValue => {
-    if (JsonValue.result == 1) {
-      showAlert(`등록되었습니다.`);
-      gotoSectionPage('login');
-    }
-    else {
-      showAlert("형식에 맞지 않습니다.");
-    }
-  })
+  if( g_User.putUser({     email:inputs[0].value,     name:inputs[1].value,    pwd:inputs[2].value  }) ) {
+    showAlert(`등록되었습니다.`);
+    gotoSectionPage('login');
+  }
+  else {
+    showAlert("형식에 맞지 않습니다.");
+  }
 }
 
 function detailPopup(e) {
@@ -269,9 +250,9 @@ function detailPopup(e) {
   investorList.empty();
   g_Investors.getInvestorFromFund(number).forEach(value => {
     investorList.append(
-    ` <div style="float: left">${value.uname}</div>
+    ` <div style="float: left">${value.uname || g_User.getName(value.email)}</div>
       <div style="float: right">${value.money.toCurrency()}</div>`);
-  })
+  });
   textArr.forEach((value, idx) => fundTexts[idx].innerHTML = `${textArr[idx]}`);
   $("#detailView").css({left: "0%"});
 }
@@ -375,7 +356,7 @@ function downInvestContract(number, email) {
     ctx.fillStyle = "#31333B";
     ctx.fillText(investor.number, 325, 185 + 44 * 0);
     ctx.fillText(investor.fname, 325, 185 + 44 * 1);
-    ctx.fillText(investor.uname, 325, 185 + 44 * 2);
+    ctx.fillText(investor.uname || g_User.getName(value.email), 325, 185 + 44 * 2);
     ctx.fillText(investor.money.toCurrency(), 325, 185 + 44 * 3);
     ctx.closePath();
 
@@ -393,7 +374,9 @@ function refreshFundBox(fundBox) {
 
   if (fundBox.hasClass('mainScreen')) {
     let rankWrappers = document.querySelectorAll(".listWrapper");
+    $('#rankWrap > div').css('visibility', 'hidden');
     g_Funds.getRankFunds().forEach((fund, i) => {
+      $(rankWrappers[i]).css('visibility', 'visible');
       let rankDiv = rankWrappers[i].querySelectorAll(".rankText");
       rankDiv[0].innerHTML = `${fund.number}`;
       rankDiv[1].innerHTML = `${fund.name}`;
@@ -412,35 +395,48 @@ function refreshFundBox(fundBox) {
 
     let fundList1 = document.querySelector(".fundList1");
     $(fundList1).empty();
-    g_Funds.getFunds().forEach(value => {
+    g_Funds.getFunds().forEach(fund => {
+
+      let btnTitle = '투자하기';
+      if( fund.owner == g_User.user.email ) {
+        // 내가 등록한 펀드이면서 모집기간이 지났음
+        if( new Date(fund.enddate).getTime() < new Date().getTime() ) {
+          btnTitle = '모집해제';
+        }
+        // 내가 등록한 펀드의 금액이 전부 모집되었음
+        if( fund.total === fund.current ) {
+          btnTitle = '완료';
+        }
+      }
 
       let divTag = document.createElement('div');
-      divTag.innerHTML = `<div id="viewFund${value.number}" class="viewListWrapper">
+      divTag.innerHTML = `<div id="viewFund${fund.number}" class="viewListWrapper">
                             <div class="graph"><div class="graph-bar"></div></div>
-                            <div class="form-control1 text-sz1-b" style="font-weight: bold;">${value.number}</div>
-                            <div class="fundTexts">${value.name}</div>
-                            <div class="fundTexts">${value.enddate}</div>
+                            <div class="form-control1 text-sz1-b" style="font-weight: bold;">${fund.number}</div>
+                            <div class="fundTexts">${fund.name}</div>
+                            <div class="fundTexts">${fund.enddate}</div>
                             <div class="flex-container">
                                 <div>
-                                <span class="fundTexts">${value.current.toCurrency()} </span>
+                                <span class="fundTexts">${fund.current.toCurrency()} </span>
                                 <span>/</span>
-                                <span class="fundTexts">${value.total.toCurrency()}</span>
+                                <span class="fundTexts">${fund.total.toCurrency()}</span>
                                 </div>
                                 <div>
-                                    <div class="fundTexts">${Math.floor(100 * value.current / value.total)}%</div>
+                                    <div class="fundTexts">${Math.floor(100 * fund.current / fund.total)}%</div>
                                 </div>
                             </div>
-                            <button class="buttonStyle investPageBtn">투자하기</button>
+                            <button class="buttonStyle investPageBtn">${btnTitle}</button>
                             <button class="buttonStyle detailViewBtn">상세보기 </button>                            
                         </div>`;
       fundList1.appendChild(divTag);
-      let transitionTime = 3 * Math.floor(value.percent) / 100;
-      animateFundDiv(`viewFund${value.number}`, value.percent, transitionTime * 1000, 2);
+      let transitionTime = 3 * Math.floor(fund.percent) / 100;
+      animateFundDiv(`viewFund${fund.number}`, fund.percent, transitionTime * 1000, 2);
 
       $(divTag).on('click', e => {
         let parent = $(e.target).parent();
         let number = parent[0].id.substr(-5);
-        if ($(e.target).text() == '투자하기') {
+        let btnText = $(e.target).text();
+        if ( btnText == '투자하기') {
           // console.log("a");
           let inputs = $("#pageContents").find("input");
           $("#investPage").css({left: "0%"});
@@ -451,7 +447,21 @@ function refreshFundBox(fundBox) {
           inputs[3].value = '';
           clearSignCanvas($('#pageContents > canvas')[0]);
         }
-        else {
+        else if ( btnText == '모집해제') {
+          let investors = g_Investors.getInvestorFromFund()
+          investors.forEach(investor =>  g_User.addMoney(investor.money, investor.email));
+          g_Investors.deleteFund(number);
+          g_Funds.deleteFund(number);
+          gotoSectionPage('view');
+        }
+        else if ( btnText == '완료') {
+          let fund = g_Funds.getFund(number);
+          console.log(fund);
+          g_User.addMoney(fund.total);
+          g_Funds.completeFund(number);
+          gotoSectionPage('view');
+        }
+        else if ( btnText == '투자하기') {
           // console.log("c");
           detailPopup(e);
         }
@@ -469,13 +479,13 @@ function refreshFundBox(fundBox) {
     investBody.empty();
     g_Investors.getInvestors().forEach(value => {
       investBody.append(`<tr data-email="${value.email}">
-      <td width="100px">${value.number}</td>
-      <td width="40%">${value.fname}</td>
-      <td width="130px">${value.uname}</td>
-      <td width="100px">${value.money}</td>
-      <td width="250px">${value.percent}%</td>
-      <td width="250px">${new Date(value.investtm).toMyDateString()}</td>
-      <td width="100px"><button class="buttonStyle">download</button></td>
+      <td>${value.number}</td>
+      <td>${value.fname}</td>
+      <td>${value.uname || g_User.getName(value.email)}</td>
+      <td style="float: right">${value.money.toCurrency()}</td>
+      <td style="text-align: center">${value.percent}%</td>
+      <td style="text-align: center">${new Date(value.investtm).toMyDateString()}</td>
+      <td style="float: right"><button class="buttonStyle">download</button></td>
       </tr>`);
     });
     investBody.find("button").on("click", e => {
@@ -576,6 +586,12 @@ function injectPaginationToClass() {
   // };
 }
 
+window.onbeforeunload = function() {
+  g_Funds.saveLocalData();
+  g_Investors.saveLocalData();
+  g_User.saveLocalData();
+};
+
 window.onload = function () {
   injectPaginationToClass();
 
@@ -670,7 +686,8 @@ window.onload = function () {
         enddate: addFundInp[2].value.replace("T", " "),
         total: parseInt(addFundInp[3].value),
         memo: parseInt(addFundInp[4].value),
-        image: $('.regDiv1st > img').attr('src')
+        image: $('.regDiv1st > img').attr('src'),
+        owner: g_User.user.email
       });
 
       showAlert(`'${addFundInp[1].value}' 펀드가 추가 되었습니다.`);

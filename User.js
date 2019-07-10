@@ -1,33 +1,73 @@
 class User {
   constructor() {
-     this.user = {
-       email: 'admin',
-       name: '홍길동',
-       money: 5000000
-     };
+    this.user = null;
+    this.userArr = [
+      {email: 'admin', pwd: 1234, name: '관리자', money: 3000000}
+    ];
+
+    let loadData = localStorage.getItem('userArr');
+    if( loadData ) {
+      this.userArr = JSON.parse(loadData);
+    }
+    else {
+      // JSON 파일에서 email을 가져와서 유저 배열에 등록.
+      $.getJSON("fund.json").done(jsvalue => {
+        jsvalue.forEach((value, idx) => {
+          this.putUser({email: value.owner, pwd: 1234, name: `홍길동${this.userArr.length}`, money: 50000});
+          value.investorList.forEach(investor => {
+            this.putUser({email: investor.email, pwd: 1234, name: `홍길동${this.userArr.length}`, money: 50000});
+          });
+        });
+      });
+    }
   }
 
-  getUser() {
-    // return this.user;
-    return this.getUserFromDB();
+  saveLocalData() {
+    localStorage.setItem('userArr', JSON.stringify(this.userArr));
   }
 
-  getUserFromDB() {
-    $.getJSON("php/check_login.php").done(jsonRes => {
-      if(jsonRes.result == 0) {
-        this.user = null;
-      } else {
-        this.user = jsonRes.user;
-
-        if( this.user.email == 'admin') {
-          this.user.money = 5000000;
-        }
-        else {
-          this.user.money = parseInt(this.user.money);
-        }
+  getUser(email, pwd) {
+    if( email != null && pwd != null) {
+      let idx = this.userArr.findIndex((value) => (value.email == email && value.pwd == pwd));
+      if( idx >= 0 ) {
+        // 유저 정보를 찾음
+        this.user = this.userArr[idx];
       }
-    });
+    }
     return this.user;
+  }
+
+  getName(email) {
+    let retName = 'Unknwon';
+    let idx = this.userArr.findIndex((value) => value.email == email);
+    if (idx >= 0) {
+      retName = this.userArr[idx].name;
+    }
+    return retName;
+  }
+
+  addMoney(money, email) {
+    if( email ) { // 이메일이 입력되면 해당 유저의 보유돈을 갱신
+      let idx = this.userArr.findIndex((value) => value.email == email);
+      if (idx >= 0) { // 찾아서 없을 때만 추가
+        this.userArr[idx].money += money;
+      }
+    }
+    else {
+      // 이메일이 없으면 로그인한 자신의 보유돈을 갱신
+      this.user.money += money;
+    }
+  }
+
+  putUser(user) {
+    let idx = this.userArr.findIndex((value) => value.email == user.email);
+    if (idx < 0) { // 찾아서 없을 때만 추가
+      if( user.money === undefined ) {
+        // 가입하면 기본값 50000원 지급
+        user.money = 50000;
+      }
+      this.userArr.push(user);
+    }
   }
 }
 

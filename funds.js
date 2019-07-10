@@ -1,12 +1,27 @@
 class Funds {
   constructor() {
     this.fundArr = [];
+    this.completeFundArr = [];
     this.nPage = 0;
     this.divide = 10.0;
 
-    $.getJSON("fund.json").done(jsvalue => {
-      jsvalue.forEach((value, idx) => this.putFund(value));
-    });
+    let loadData = localStorage.getItem('fundArr');
+    if (loadData) {
+      this.fundArr = JSON.parse(loadData);
+    }
+    else {
+      $.getJSON("fund.json").done(jsvalue => {
+        jsvalue.forEach((value, idx) => this.putFund(value));
+      });
+    }
+
+    let completeFundData = localStorage.getItem('completeFundArr');
+    this.completeFundArr = loadData ? JSON.parse(completeFundData) : [];
+  }
+
+  saveLocalData() {
+    localStorage.setItem('fundArr', JSON.stringify(this.fundArr));
+    localStorage.setItem('completeFundArr', JSON.stringify(this.completeFundArr));
   }
 
   getCount() {
@@ -22,11 +37,13 @@ class Funds {
     sortArr.sort((a, b) => a.percent > b.percent ? -1 : 1);
 
     let rankArr = [];
-    for( let i =0; i < 4 && i < this.fundArr.length; i++) {
-      rankArr.push(this.fundArr[sortArr[i].index])
+    for (let i = 0; rankArr.length < 4 && i < this.fundArr.length; i++) {
+      let fund = this.fundArr[sortArr[i].index];
+      if( new Date(fund.enddate).getTime() > new Date().getTime()) {
+        // 마감일이 지나지 않은 펀드만 Rank에 추가
+        rankArr.push(fund);
+      }
     }
-    // [0, 1, 2, 3].forEach(i => );
-    // console.log(rankArr);
     return rankArr;
   }
 
@@ -40,14 +57,14 @@ class Funds {
   }
 
   getFund(fundNumber) {
-    let idx = this.fundArr.findIndex(fund => fund.number === fundNumber);
+    let idx = this.fundArr.findIndex(fund => fund.number == fundNumber);
     return (idx < 0) ? null : this.fundArr[idx];
   }
 
   putFund(newFund) {
     // 펀드 번호가 동일한 데이터가 입력되면 이전 데이터를 삭제 후 입력함.
-    let idx = this.fundArr.findIndex(fund => fund.number === newFund.number);
-    if( idx >= 0) { // 이전펀드가 존재하면 값을 갱신함.
+    let idx = this.fundArr.findIndex(fund => fund.number == newFund.number);
+    if (idx >= 0) { // 이전펀드가 존재하면 값을 갱신함.
       // 투자로 인해서 Put되는 경우 현재값을 더해줌
       this.fundArr[idx].current += newFund.current;
       // 투자율 재계산
@@ -63,15 +80,48 @@ class Funds {
         total: newFund.total,
         current: newFund.current,
         percent: Math.floor(100 * newFund.current / newFund.total),
-        owner: newFund.owner
+        owner: newFund.owner || newFund.email,
       });
     }
   }
-  getFundFromCreator(email) {
-    return this.fundArr;
+
+  // C모듈 기능
+  completeFund(fundNumber) {
+    let idx = this.fundArr.findIndex(fund => fund.number === fundNumber);
+    if (idx >= 0) { // 찾지 못했을 경우 예외처리
+      this.completeFundArr.push(this.fundArr[idx]);
+      this.fundArr.splice(idx, 1);
+    }
   }
+
+  // C모듈 기능
+  deleteFund(fundNumber) {
+    let idx = this.fundArr.findIndex(fund => fund.number === fundNumber);
+    if (idx >= 0) { // 찾지 못했을 경우 예외처리
+      this.fundArr.splice(idx, 1);
+    }
+  }
+
+  // C모듈 기능
+  getFundFromCreator(email) {
+    let retFunds = [];
+    this.fundArr.forEach(fund => {
+      if (fund.owner == email) {
+        retFunds.push(fund);
+      }
+    });
+    return retFunds;
+  }
+
+  // C모듈 기능
   getFundFromComplete(email) {
-    return this.fundArr;
+    let retFunds = [];
+    this.completeFundArr.forEach(fund => {
+      if (fund.owner == email) {
+        retFunds.push(fund);
+      }
+    });
+    return retFunds;
   }
 }
 

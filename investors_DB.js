@@ -18,12 +18,17 @@ class Investors {
     this.investorArr = [];
   }
 
-  getInvestorCount() {
-    return this.investorArr.length;
+  getCount() {
+      let count = 0;
+      $.getJSON("php/get_count.php").done(jsRes => {
+        if(jsRes.result) {
+          count = jsRes.investor;
+        }
+      });
+      return count;
   }
 
   findInvestor(fundNumber, userEmail) {
-   
     return 0;
   }
 

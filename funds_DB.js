@@ -14,9 +14,8 @@ class Funds {
     
   }
 
-  getFundCount() {
+  getCount() {
     let count = 0;
-
     $.getJSON("php/get_count.php").done(jsRes => {
       if(jsRes.result) {
         count = jsRes.fund;
