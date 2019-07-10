@@ -449,7 +449,7 @@ function refreshFundBox(fundBox) {
         }
         else if ( btnText == '모집해제') {
           let investors = g_Investors.getInvestorFromFund()
-          investors.forEach(investor =>  g_User.addMoney(investor.money, investor.email));
+          investors.forEach(investor =>  g_User.addUserMoney(investor.money, investor.email));
           g_Investors.deleteFund(number);
           g_Funds.deleteFund(number);
           gotoSectionPage('view');
@@ -457,7 +457,7 @@ function refreshFundBox(fundBox) {
         else if ( btnText == '완료') {
           let fund = g_Funds.getFund(number);
           console.log(fund);
-          g_User.addMoney(fund.total);
+          g_User.addUserMoney(fund.total);
           g_Funds.completeFund(number);
           gotoSectionPage('view');
         }

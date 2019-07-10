@@ -5,9 +5,9 @@ class User {
 
   getUser(email, pwd) {
     if( email != null && pwd != null) {
-      $.getJSON(`php/check_login.php?email=${loginInputs[0].value}&pwd=${loginInputs[1].value}`).done(JsonValue => {
-        if (JsonValue.result == 1) {
-          this.user = JsonValue.user;
+      $.getJSON(`php/get_user.php?email=${email}&pwd=${pwd}`).done(jsRes => {
+        if (jsRes.result == 1) {
+          this.user = jsRes.user;
           this.user.money = parseInt(this.user.money);
         }
       });
@@ -15,8 +15,18 @@ class User {
     return this.user;
   }
 
+  getName(email) {
+    let name = $.getJSON(`php/get_name.php?email=${email}`).done(jsRes => jsRes.name || 'Unknown');
+    return name;
+  }
+
+  addUserMoney(money, email) {
+    if( money != null && email != null ) {
+      $.post('php/add_user_money.php', {money: money, email: email}).done(jsRes => console.log(jsRes));
+    }
+  }
+
   putUser(user) {
-    console.log(user);
     let retValue = 0;
     $.getJSON(`php/create_user.php?email=${user.email}&name=${user.name}&pwd=${user.pwd}`).done(JsonValue => {
       retValue = JsonValue.result;
