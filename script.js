@@ -415,6 +415,11 @@ function refreshFundBox(fundBox) {
           btnTitle = '완료';
         }
       }
+      else {
+        if( new Date(fund.enddate).getTime() < new Date().getTime() ) {
+          btnTitle = '모집마감';
+        }
+      }
 
       let divTag = document.createElement('div');
       divTag.innerHTML = `<div id="viewFund${fund.number}" class="viewListWrapper">
@@ -471,6 +476,10 @@ function refreshFundBox(fundBox) {
         else if ( btnText == '상세보기') {
           // console.log("c");
           detailPopup(e);
+        }
+        else if ( btnText == '모집마감') {
+          let fund = g_Funds.getFund(number);
+          showAlert(`펀드 만든사람("${g_User.getName(fund.owner)}")이 모집해제 할 수 있습니다.`);
         }
       });
     });
