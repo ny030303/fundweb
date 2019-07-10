@@ -24,6 +24,10 @@ class Funds {
     localStorage.setItem('completeFundArr', JSON.stringify(this.completeFundArr));
   }
 
+  getPageCount() {
+    return Math.floor((this.getCount() + this.divide - 1) / this.divide);
+  }
+
   getCount() {
     return this.fundArr.length;
   }

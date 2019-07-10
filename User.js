@@ -1,7 +1,7 @@
 class User {
   constructor() {
-    this.user = null;
-    this.userArr = [
+    this.user = null; // 로그인한 유저 정보
+    this.userArr = [  // 유저 전체 정보
       {email: 'admin', pwd: 1234, name: '관리자', money: 3000000}
     ];
 
@@ -12,9 +12,10 @@ class User {
     else {
       // JSON 파일에서 email을 가져와서 유저 배열에 등록.
       $.getJSON("fund.json").done(jsvalue => {
-        jsvalue.forEach((value, idx) => {
-          this.putUser({email: value.owner, pwd: 1234, name: `홍길동${this.userArr.length}`, money: 50000});
-          value.investorList.forEach(investor => {
+        jsvalue.forEach(fund => {
+          this.putUser({email: fund.owner, pwd: 1234, name: `홍길동${this.userArr.length}`, money: 50000});
+          
+          fund.investorList.forEach(investor => {
             this.putUser({email: investor.email, pwd: 1234, name: `홍길동${this.userArr.length}`, money: 50000});
           });
         });
@@ -46,7 +47,7 @@ class User {
     return retName;
   }
 
-  addMoney(money, email) {
+  addUserMoney(money, email) {
     if( email ) { // 이메일이 입력되면 해당 유저의 보유돈을 갱신
       let idx = this.userArr.findIndex((value) => value.email == email);
       if (idx >= 0) { // 찾아서 없을 때만 추가

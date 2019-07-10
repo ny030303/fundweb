@@ -111,6 +111,7 @@ function closePopupSection(popupSectionId) {
 }
 
 function gotoSectionPage(title) {
+  /*
   let navATag = $(".nav-lists-a");
   for (let i = 0; i < navATag.length; i++) {
     let aTag = navATag[i];
@@ -118,6 +119,16 @@ function gotoSectionPage(title) {
     if (aTag.innerText.toLowerCase() == title.toLowerCase()) {
       aTag.click();
     }
+  }
+  */
+ let navATag = $(".nav-lists-a");
+  switch(title) {
+    case 'Home': navATag[0].click(); break;
+    case 'View':navATag[1].click(); break;
+    case 'AddFund':navATag[2].click(); break;
+    case 'investorList':navATag[3].click(); break;
+    case 'login': navATag[4].click(); break;
+    case 'signUp': navATag[5].click(); break;
   }
 }
 
@@ -185,7 +196,8 @@ function onInvestorListSort(type) {
 
 function userLogout() {
   showAlert("로그아웃 됐습니다.");
-  setTimeout(() => window.location.href = "php/logout.php", 300);
+  // setTimeout(() => window.location.href = "php/logout.php", 300);
+  setTimeout(() => window.location.href = "/", 300);
 }
 
 function signInUser() {
@@ -265,25 +277,20 @@ function animateFundDiv(fundDivId, percent, msec, divnum) {
 
   // console.log('animateFundDiv:', fundDivId, percent, msec);
   // 이전 동작중인 애니메이션 정지와 CSS값 초기화
-  graphBar.stop().css({
-    width: '0%'
-  });
+  graphBar.stop();
+  graphBar.css({width: '0%'});
   percentDiv.html('모집율 : 0%');
 
   // JQuery 애니메이션 실행
-  graphBar.animate({
-    width: `${percent}%`
-  }, {
+  graphBar.animate({width: `${percent}%`}, {
     duration: msec,
     step: () => { // 애니메이션 동작을 실행하는 곳
-      let widthPer = graphBar[0].style.width;
+      let widthPer = graphBar[0].style.width; //  10.234314%
       widthPer = widthPer.substring(0, widthPer.lastIndexOf('.'));
       percentDiv.html(`모집율 : ${widthPer}%`);
     },
     complete: () => { // 애니메이션 동작이 끝났을 때 마지막 값 설정
-      graphBar.stop().css({
-        width: `${percent}%`
-      });
+      graphBar.stop().css({ width: `${percent}%`});
       percentDiv.html(`모집율 : ${percent}%`);
     }
   });
@@ -293,12 +300,12 @@ function makePagination(fundBox) {
   let pageTarget = fundBox.hasClass('view') ? g_Funds : g_Investors;
   let pageTargetName = fundBox.hasClass('view') ? "view": "investorList";
 
-  let pageHtml = `<div class="${pageTarget.getPage() === 0 ? 'disable' : 'normal'}">＜</div>`;
+  let pageHtml = `<div class="${pageTarget.nPage === 0 ? 'disable' : 'normal'}">＜</div>`;
   for (let i = 0; i < pageTarget.getPageCount(); i++) {
-    pageHtml += `<div class="${pageTarget.getPage() === i ? 'active-ball' : 'normal'}">${i + 1}</div>`;
+    pageHtml += `<div class="${pageTarget.nPage === i ? 'active-ball' : 'normal'}">${i + 1}</div>`;
   }
   // 페이지 Index는 0부터 시작 숫자는 1부터 시작이므로 1개 차이가 있음을 고려해야 함.
-  pageHtml += `<div class="${pageTarget.getPage() === (pageTarget.getPageCount() - 1) ? 'disable' : 'normal'}">＞</div>`;
+  pageHtml += `<div class="${pageTarget.nPage === (pageTarget.getPageCount() - 1) ? 'disable' : 'normal'}">＞</div>`;
 
   fundBox.find('.pagination').html(pageHtml);
 
@@ -306,13 +313,13 @@ function makePagination(fundBox) {
     if ($(e.target).hasClass('disable')) return;
     let value = $(e.target).html();
     if (value === '＜') {
-      pageTarget.setPage(pageTarget.getPage() - 1);
+      pageTarget.setPage(pageTarget.nPage - 1);
     }
     else if (value === '＞') {
-      pageTarget.setPage(pageTarget.getPage() + 1);
+      pageTarget.nPage = pageTarget.nPage + 1;
     }
     else {
-      pageTarget.setPage(Number(value) - 1);
+      pageTarget.nPage = Number(value) - 1;
     }
     gotoSectionPage(pageTargetName);
   });
@@ -426,7 +433,7 @@ function refreshFundBox(fundBox) {
                                 </div>
                             </div>
                             <button class="buttonStyle investPageBtn">${btnTitle}</button>
-                            <button class="buttonStyle detailViewBtn">상세보기 </button>                            
+                            <button class="buttonStyle detailViewBtn">상세보기</button>                            
                         </div>`;
       fundList1.appendChild(divTag);
       let transitionTime = 3 * Math.floor(fund.percent) / 100;
@@ -461,7 +468,7 @@ function refreshFundBox(fundBox) {
           g_Funds.completeFund(number);
           gotoSectionPage('view');
         }
-        else if ( btnText == '투자하기') {
+        else if ( btnText == '상세보기') {
           // console.log("c");
           detailPopup(e);
         }
@@ -516,7 +523,6 @@ function initSignCanvas(canvas) {
   ctx.beginPath();
 
   let eventListener = (event) => {
-    // console.log(event);
     // console.log(event.type, event.offsetX, event.offsetY);
     switch (event.type) {
       case 'mousedown':
@@ -547,26 +553,24 @@ function initSignCanvas(canvas) {
 }
 
 function injectPaginationToClass() {
-  // prototype 메소드 같은 function으로 만들어서 기존 prototype에 통합하는 방법
-  let pageFuntions = {
-      getPageCount: function() {
-        return Math.floor((this.getCount() + this.divide - 1) / this.divide);
-      },
-      getPage: function() {
-        return  this.nPage;
-      },
-      setPage: function(page) {
-        this.nPage = page;
-        if( this.nPage < 0 ) {
-          this.nPage = 0;
-        }
-        if( this.nPage >= this.getPageCount() ) {
-          this.nPage = this.getPageCount() - 1;
-        }
-      }
-  };
-  Funds.prototype = Object.assign(Funds.prototype, pageFuntions);
-  Investors.prototype = Object.assign(Investors.prototype, pageFuntions);
+  // // prototype 메소드 같은 function으로 만들어서 기존 prototype에 통합하는 방법
+  // let pageFuntions = {
+  //     ,
+  //     getPage: function() {
+  //       return  this.nPage;
+  //     },
+  //     setPage: function(page) {
+  //       this.nPage = page;
+  //       if( this.nPage < 0 ) {
+  //         this.nPage = 0;
+  //       }
+  //       if( this.nPage >= this.getPageCount() ) {
+  //         this.nPage = this.getPageCount() - 1;
+  //       }
+  //     }
+  // };
+  // Funds.prototype = Object.assign(Funds.prototype, pageFuntions);
+  // Investors.prototype = Object.assign(Investors.prototype, pageFuntions);
 
   // prototype에 직접 연결하는 방법
   // Investors.prototype.getPageCount = Funds.prototype.getPageCount = function() {

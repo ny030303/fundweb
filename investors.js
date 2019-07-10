@@ -11,14 +11,14 @@ class Investors {
     }
     else {
       $.getJSON("fund.json").done(jsvalue => {
-        jsvalue.forEach((value, idx) => {
-          value.investorList.forEach(investor => this.putInvestor({
-            number: value.number,
+        jsvalue.forEach((fund) => {
+          fund.investorList.forEach(investor => this.putInvestor({
+            number: fund.number,
             email: investor.email,
-            fname: value.name,
+            fname: fund.name,
             uname: null,
             sign: null,
-            total: value.total,
+            total: fund.total,
             money: investor.pay,
             investtm: new Date(investor.datetime).getTime()
           }));
@@ -34,6 +34,10 @@ class Investors {
   setInvestorSortType(type) {
     this.sortType = type; // 0: 최근등록순, 1: 펀드별, 2: 개인별
     this.nPage = 0;
+  }
+
+  getPageCount() {
+    return Math.floor((this.getCount() + this.divide - 1) / this.divide);
   }
 
   getCount() {
@@ -78,7 +82,7 @@ class Investors {
       percent: Math.floor(100 * investor.money / investor.total),
       investtm: investor.investtm || (new Date().getTime())
     });
-    this.investorArr.sort((a, b) => a.createtm > b.createtm ? -1 : 1);
+    //this.investorArr.sort((a, b) => a.createtm > b.createtm ? -1 : 1);
   }
 
   getInvestor(number, email) {
@@ -90,7 +94,6 @@ class Investors {
     let retArr = [];
     this.investorArr.forEach(value => {
       if (value.number == number) {
-        if (!value.uname) value.uname = 'unknown';
         retArr.push(value);
       }
     });
