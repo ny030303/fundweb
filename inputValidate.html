@@ -10,6 +10,7 @@
     margin: 0;
     padding: 0;
   }
+
   ul {
     list-style-type: none;
   }
@@ -32,7 +33,7 @@
     border-color: red;
   }
 
-  li  {
+  li {
     border-bottom: 1px solid #666;
   }
 
@@ -44,55 +45,68 @@
 <script src="jquery-3.4.1.js"></script>
 
 <body>
-  <ul>
-    <li>
-      <div>
-        <label>이메일: </label>
-        <input type="email" data-validcheck="email" />
-        <span>이메일을 입력해주세요.</span>
-      </div>
-    </li>
-    <li>
-      <div>
-        <label>비밀번호: </label>
-        <input type="password" data-validcheck="password" id="pwd1" />
-        <span>비밀번호를 입력해주세요.</span>
-      </div>
-    </li>
-    <li>
-      <div>
-        <label>비밀번호 확인: </label>
-        <input type="password" data-validcheck="password2" id="pwd2" />
-        <span>비밀번호를 입력해주세요.</span>
-      </div>
-    </li>
-    <li>
-      <div>
-        <label>펀드명: </label>
-        <input type="text" data-validcheck="name" />
-        <span>펀드명을 입력해주세요.</span>
-      </div>
-    </li>
-    <li>
-      <div>
-        <label>날짜 & 시간: </label>
-        <input type="datetime-local" data-validcheck="date" />
-        <span>날짜와 시간을 입력해주세요.</span>
-      </div>
-    </li>
-    <li>
-      <div>
-        <label>금액: </label>
-        <input type="number" data-validcheck="money" />
-        <span>금액을 입력해주세요.</span>
-      </div>
-    </li>
-  </ul>
+<ul>
+  <li>
+    <div>
+      <label>이메일: </label>
+      <input type="email" data-validcheck="email"/>
+      <span>이메일을 입력해주세요.</span>
+    </div>
+  </li>
+  <li>
+    <div>
+      <label>비밀번호: </label>
+      <input type="password" data-validcheck="password" id="pwd1"/>
+      <span>비밀번호를 입력해주세요.</span>
+    </div>
+  </li>
+  <li>
+    <div>
+      <label>비밀번호 확인: </label>
+      <input type="password" data-validcheck="password2" id="pwd2"/>
+      <span>비밀번호를 입력해주세요.</span>
+    </div>
+  </li>
+  <li>
+    <div>
+      <label>펀드명: </label>
+      <input type="text" data-validcheck="name"/>
+      <span>펀드명을 입력해주세요.</span>
+    </div>
+  </li>
+  <li>
+    <div>
+      <label>날짜 & 시간: </label>
+      <input type="datetime-local" data-validcheck="date"/>
+      <span>날짜와 시간을 입력해주세요.</span>
+    </div>
+  </li>
+  <li>
+    <div>
+      <label>금액: </label>
+      <input type="number" data-validcheck="money"/>
+      <span>금액을 입력해주세요.</span>
+    </div>
+  </li>
+</ul>
 </body>
 <script>
-  // function checkEmail(email) {
-  //   return /^[\w-.]+@[\w-]+\.+[\w-.]+/g.test(email);
-  // }
+  function checkEmail(email) {
+    // return /^[\w-.]+@[\w-]+\.+[\w-.]+[\w]{2,3}/g.test(email);
+
+    // 마지막 문자 2,3자리 제한을 가지며, 영문 소문자로만 이루어진다. (체크)
+    let lastText = email.substr(email.lastIndexOf('.') + 1);
+    console.log(lastText);
+    if (!(lastText.length == 2 || lastText.length == 3)) {
+      return '마지막 문자는 2,3자리 이루어져야 합니다.';
+    }
+
+    let faultCnt = Array.from(lastText).filter(v => !(v >= 'a' && v <= 'z')).length;
+    if (faultCnt > 0) {
+      return '마지막 문자에는 대문자로 입력되면 안됩니다.';
+    }
+    return null;
+  }
 
   function checkPassword(password) {
     // RegEx 사용하는 방법
@@ -124,14 +138,16 @@
 
     $('input').on('input change', function (e) {
       let jqElm = $(e.target);
+      let validateMsg = '';
       jqElm.next().text('');
       switch (jqElm.attr('data-validcheck')) {
         case 'email':
         case 'date':
           console.log('jqElm[0].valid = ', jqElm[0].valid);
-          if (jqElm[0].validationMessage) {
+          validateMsg = jqElm[0].validationMessage || checkEmail(jqElm.val());
+          if (validateMsg) {
             jqElm.addClass('input-invaid');
-            jqElm.next().text(jqElm[0].validationMessage);
+            jqElm.next().text(validateMsg);
           }
           else {
             jqElm.removeClass('input-invaid');
@@ -139,10 +155,10 @@
           break;
 
         case 'password':
-          let validationMsg = checkPassword(jqElm.val());
-          if (validationMsg) {
+          validateMsg = checkPassword(jqElm.val());
+          if (validateMsg) {
             jqElm.addClass('input-invaid');
-            jqElm.next().text(validationMsg);
+            jqElm.next().text(validateMsg);
           }
           else {
             jqElm.removeClass('input-invaid');
