@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+</head>
+<style>
+  * {
+    margin: 0;
+    padding: 0;
+  }
+  ul {
+    list-style-type: none;
+  }
+
+  label {
+    width: 120px;
+    float: left;
+    text-align: right;
+    padding-right: 9px;
+  }
+
+  input {
+    float: left;
+    height: 20px;
+    border-color: #aaa;
+    margin-right: 20px;
+  }
+
+  .input-invaid {
+    border-color: red;
+  }
+
+  li  {
+    border-bottom: 1px solid #666;
+  }
+
+  li > div {
+    display: inline-block;
+    padding: 15px 0px 15px 10px;
+  }
+</style>
+<script src="jquery-3.4.1.js"></script>
+
+<body>
+  <ul>
+    <li>
+      <div>
+        <label>이메일: </label>
+        <input type="email" data-validcheck="email" />
+        <span>이메일을 입력해주세요.</span>
+      </div>
+    </li>
+    <li>
+      <div>
+        <label>비밀번호: </label>
+        <input type="password" data-validcheck="password" id="pwd1" />
+        <span>비밀번호를 입력해주세요.</span>
+      </div>
+    </li>
+    <li>
+      <div>
+        <label>비밀번호 확인: </label>
+        <input type="password" data-validcheck="password2" id="pwd2" />
+        <span>비밀번호를 입력해주세요.</span>
+      </div>
+    </li>
+    <li>
+      <div>
+        <label>펀드명: </label>
+        <input type="text" data-validcheck="name" />
+        <span>펀드명을 입력해주세요.</span>
+      </div>
+    </li>
+    <li>
+      <div>
+        <label>날짜 & 시간: </label>
+        <input type="datetime-local" data-validcheck="date" />
+        <span>날짜와 시간을 입력해주세요.</span>
+      </div>
+    </li>
+    <li>
+      <div>
+        <label>금액: </label>
+        <input type="number" data-validcheck="money" />
+        <span>금액을 입력해주세요.</span>
+      </div>
+    </li>
+  </ul>
+</body>
+<script>
+  // function checkEmail(email) {
+  //   return /^[\w-.]+@[\w-]+\.+[\w-.]+/g.test(email);
+  // }
+
+  function checkPassword(password) {
+    // RegEx 사용하는 방법
+    // let engCnt = (password.match(/[a-zA-Z]/g) || []).length;
+    // let numCnt = (password.match(/[0-9]/g) || []).length;
+    // let spcCnt = (password.match(/[\!\@\#\$\%\^\&\*\(\)]/g) || []).length;
+
+    // 필터를 이용한 방법
+    password = password.toUpperCase();
+    let engCnt = Array.from(password).filter(v => (v >= 'A' && v <= 'Z')).length;
+    let numCnt = Array.from(password).filter(v => (v >= '0' && v <= '9')).length;
+    let spcCnt = Array.from(password).filter(v => ['!', '@', '#', '$', '%', '^', '&', '*', '(', ')'].indexOf(v) >= 0).length;
+
+    if (engCnt == 0) return '영문이 한글자이상 포함되어야 합니다.'
+    if (numCnt == 0) return '숫자가 한글자이상 포함되어야 합니다.'
+    if (spcCnt == 0) return '특수문자가 한글자이상 포함되어야 합니다.'
+    return '';
+  }
+
+  function checkName(name) {
+    return name.match(/^[a-zA-Z가-힣\s]+$/g) ? true : false;
+  }
+
+  function checkMoney(date) {
+    return /^[0-9]+$/g.test(date);
+  }
+
+  $(document).ready(function () {
+
+    $('input').on('input change', function (e) {
+      let jqElm = $(e.target);
+      jqElm.next().text('');
+      switch (jqElm.attr('data-validcheck')) {
+        case 'email':
+        case 'date':
+          console.log('jqElm[0].valid = ', jqElm[0].valid);
+          if (jqElm[0].validationMessage) {
+            jqElm.addClass('input-invaid');
+            jqElm.next().text(jqElm[0].validationMessage);
+          }
+          else {
+            jqElm.removeClass('input-invaid');
+          }
+          break;
+
+        case 'password':
+          let validationMsg = checkPassword(jqElm.val());
+          if (validationMsg) {
+            jqElm.addClass('input-invaid');
+            jqElm.next().text(validationMsg);
+          }
+          else {
+            jqElm.removeClass('input-invaid');
+            if (!jqElm[0].valid) {
+              jqElm.next().text(jqElm[0].validationMessage);
+            }
+          }
+          break;
+
+        case 'password2':
+          if ($('#pwd1').val() != jqElm.val()) {
+            jqElm.addClass('input-invaid');
+            jqElm.next().text('비밀번호를 동일하게 입력해주세요.');
+          }
+          else {
+            jqElm.removeClass('input-invaid');
+          }
+          break;
+
+        case 'name':
+          if (!checkName(jqElm.val())) {
+            jqElm.addClass('input-invaid');
+            jqElm.next().text('명칭 규격에 맞지 않습니다.');
+          }
+          else {
+            jqElm.removeClass('input-invaid');
+          }
+          break;
+
+        case 'money':
+          if (!checkMoney(jqElm.val())) {
+            jqElm.addClass('input-invaid');
+            jqElm.next().text('숫자만 입력해주세요.');
+          }
+          else {
+            jqElm.removeClass('input-invaid');
+          }
+          break;
+      }
+    });
+  });
+</script>
+
+</html>
