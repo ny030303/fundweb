@@ -5,7 +5,7 @@
 
     $page = isset($_GET['page']) ? ((int) $_GET['page']) * 10 : 0;
 
-    $sql = "select * from test.fund order by createtm desc limit {$page}, 10";
+    $sql = "select * from fundweb_fund order by createtm desc limit {$page}, 10";
     $funds = fetch($con, $sql);
     if(!$funds){
          $json = json_encode(array('result' => 0));

@@ -3,7 +3,7 @@
 
     header('Content-Type: application/json');
 
-    $sql  = "select * from test.fund ";
+    $sql  = "select * from fundweb_fund ";
     $sql .= "where (enddate > now()) and (total > current) order by percent desc limit 4";
     $funds = fetch($con, $sql);
     if($funds) {

@@ -9,8 +9,8 @@
 
     // $sql = "select * from test.investor order by investtm desc limit {$page}, 10";
      $sql = "SELECT a.number, a.name,  b.name as uname, a.total, a.money, a.sign
-     FROM test.investor as a 
-     inner join test.user as b 
+     FROM fundweb_investor as a 
+     inner join fundweb_user as b 
      on a.email = b.email 
      order by investtm desc limit {$page}, 10";
     $investors = fetch($con, $sql);

@@ -12,7 +12,7 @@
 
     $params = [ $number, $email, $name, $total, $money, $sign ];
 
-    $sql  = "insert into test.investor (number, email, name, total, money, sign) values (?, ?, ?, ?, ?, ?) ";
+    $sql  = "insert into fundweb_investor (number, email, name, total, money, sign) values (?, ?, ?, ?, ?, ?) ";
     $sql .= " on duplicate key update ";
     if( $name  != null ) $sql .= "   name = values(name), ";
     if( $total != null ) $sql .= "   total = values(total), ";

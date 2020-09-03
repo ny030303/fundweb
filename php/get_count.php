@@ -3,7 +3,7 @@
 
     header('Content-Type: application/json');
 
-    $fund = fetch($con, "select count(*) count from test.fund");
+    $fund = fetch($con, "select count(*) count from fundweb_fund");
     // $investor = fetch($con, "select count(*) count from test.investor");
     // $user = fetch($con, "select count(*) count from test.user");
 

@@ -15,12 +15,12 @@
     $params = array();
     
     if( ($name != null) and ($enddate != null) ) {
-        $sql  = "insert into test.fund (number, name, enddate, total, current, percent, image, memo, creator) ";
+        $sql  = "insert into fundweb_fund (number, name, enddate, total, current, percent, image, memo, creator) ";
         $sql .= "  values (?, ?, ?, ?, ?, ?, ?, ?, ?)";
         $params = [$number, $name, $enddate, $total, 0, 0, $image, $memo, $creator];
     }
     else {
-        $sql = "update fund set ";
+        $sql = "update fundweb_fund set ";
         if( $current != null)  {
             $sql .= " current = ?, percent = ?";
             array_push($params, $current);

@@ -3,7 +3,7 @@
 
   header('Content-Type: application/json');
 
-  $sql1 = "create table if not exists fund (
+  $sql1 = "create table if not exists fundweb_fund (
       number varchar(20) not null,
       name varchar(100),
       enddate datetime,
@@ -16,7 +16,7 @@
     ) engine=innodb default charset=utf8";
   execSql($con, $sql1);
 
-  $sql2 = "create table if not exists investor (
+  $sql2 = "create table if not exists fundweb_investor (
      number varchar(20) not null,
      email varchar(100) not null,
      name varchar(100),
@@ -28,7 +28,7 @@
    ) engine=innodb default charset=utf8;";
   execSql($con, $sql2);
 
-  $sql3 = "create table  if not exists user (
+  $sql3 = "create table  if not exists fundweb_user (
       email varchar(100) not null,
       name varchar(100) not null,
       pwd varchar(100) not null,
@@ -38,12 +38,12 @@
   execSql($con, $sql3);
 
   // 기본 데이터 입력
-  $insQry1  = "insert into user (email, name, pwd, money) values ";
+  $insQry1  = "insert into fundweb_user (email, name, pwd, money) values ";
   $insQry1 .= "  ('admin', '관리자', password('1234'), 0),";
   $insQry1 .= "  ('ny030303@naver.com', '정나영', password('1234'), 50000)";
   execSql($con, $insQry1);
 
-  $insQry2  = "insert into test.fund (number, name, enddate, total, current, percent, image, createtm) values ";
+  $insQry2  = "insert into fundweb_fund (number, name, enddate, total, current, percent, image, createtm) values ";
   $insQry2 .= "  ('A0123', '대한민국 1등 비건 베이커리', '2019-06-20 15:30:00', '40000', '36000', '90', NULL, now()), ";
   $insQry2 .= "  ('A0495', '환경 친화적인 비닐개발', '2019-08-24 17:00:30', '100000', '5000', '5', NULL, now()), ";
   $insQry2 .= "  ('A1001', '기능반 간식비 프로젝트', '2019-08-30 09:00:00', '100000', '9500', '10', NULL, now()), ";
@@ -70,7 +70,7 @@
   $insQry2 .= "  ('E7184', '데이터 기반, 최저가 신차 구매', '2019-08-04 17:00:30', '50000', '20000', '40', NULL, now()) ";
   execSql($con, $insQry2);
 
-  $insQry3  = "insert into test.investor (number, email, name, total, money, sign, investtm) values ";
+  $insQry3  = "insert into fundweb_investor (number, email, name, total, money, sign, investtm) values ";
   $insQry3 .= " ('A0123', 'admin', '대한민국 1등 비건 베이커리', '40000', '35000', NULL, now()), ";
   $insQry3 .= " ('A0123', 'ny030303@naver.com', '대한민국 1등 비건 베이커리', '40000', '1000', NULL, now()), ";
   $insQry3 .= " ('A0495', 'admin', '환경 친화적인 비닐개발', '100000', '5000', NULL, now()), ";

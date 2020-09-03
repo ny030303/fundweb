@@ -9,7 +9,7 @@
 
   $number = isset($_GET['number']) ? $_GET['number'] : null;
 
-  $query = "select * from fund where number = ?";
+  $query = "select * from fundweb_fund where number = ?";
 
   $fund = fetch($con, $query , [$number]);
 

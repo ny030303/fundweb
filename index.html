@@ -5,14 +5,16 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>KickStarter Fund Web Page</title>
+    <title>펀드 웹 페이지</title>
+    <link rel="stylesheet" href="jquery-ui-1.11.4/themes/start/jquery-ui.css">
     <link type="text/css" rel="stylesheet" href="style.css">
 </head>
 
 <body>
     <div id="sectionWrap">
         <section id="header">
-            <div id="header-top"></div>
+            <div id="header-top">
+            </div>
             <div id="header-bottom-wrap">
                 <div id="header-bottom">
                     <ul id="nav-wrap">
@@ -45,7 +47,6 @@
                     </ul>
 
                     <div id="logo">kickstarter</div>
-                    <div id="haveMyMoney" style="float: right; text-shadow: 2px 2px #aaa;"></div>
                 </div>
             </div>
         </section>
@@ -55,7 +56,7 @@
                 <div id="dark"></div>
                 <div id="homeimgText">Welcome To <span>KickStarter.</span><br>
                     <p id="subText">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor </p>
-                    <button id="homeDBtn" onclick="gotoSectionPage('AddFund')"> Go to add Fund.</button>
+                    <button id="homeDBtn" onclick="GoToAddFund()"> Go to add Fund.</button>
                 </div>
             </div>
             <div id="contents">
@@ -239,9 +240,9 @@
             <div class="investorList">
                 <div>
                     <ul>
-                        <li class="buttonStyle" style="float: left; margin: 5px; text-align: center;" onclick="onInvestorListSort(0)">최근등록순</li>
-                        <li class="buttonStyle" style="float: left; margin: 5px; text-align: center;" onclick="onInvestorListSort(1)">펀드별</li>
-                        <li class="buttonStyle" style="float: left; margin: 5px; text-align: center;" onclick="onInvestorListSort(2)">개인별</li>
+                        <li class="buttonStyle" onclick="onInvestorListSort(0)">펀드지분순</li>
+                        <li class="buttonStyle" onclick="onInvestorListSort(1)">펀드번호순</li>
+                        <li class="buttonStyle" onclick="onInvestorListSort(2)">투자시간순</li>
                     </ul>
                 </div>
                 <table style="border: 1px solid #ccc; width: 100%">
@@ -252,7 +253,6 @@
                             <th width="130px">투자자명</th>
                             <th width="100px">투자금액</th>
                             <th width="250px">펀드지분</th>
-                            <th width="250px">투자일시</th>
                             <th width="100px">펀드계약서</th>
                         </tr>
                     </thead>
@@ -286,10 +286,10 @@
                         <div class="sinUpGuidText">Email</div>
                         <input class="form-control loginInputs" id="" type="text">
                         <div class="sinUpGuidText">Password</div>
-                        <input class="form-control loginInputs" id="" type="password">
+                        <input class="form-control loginInputs" id="" type="text">
                         <button class="signUpBtn" onclick="signInUser()">LOGIN</button>
                         <p id="loginGuidText">Don't have an account? <button id="loginGuidBtn"
-                                onclick="gotoSectionPage('SignUp')">SIGN UP</button></p>
+                                onclick="goToSignUp()">SIGN UP</button></p>
                     </div>
                 </div>
             </div>
@@ -306,9 +306,9 @@
                         <div class="sinUpGuidText">Full Name</div>
                         <input class="form-control loginInputs" id="" type="text">
                         <div class="sinUpGuidText">Password</div>
-                        <input class="form-control loginInputs" id="" type="password">
+                        <input class="form-control loginInputs" id="" type="text">
                         <div class="sinUpGuidText">Check Password</div>
-                        <input class="form-control loginInputs" id="" type="password">
+                        <input class="form-control loginInputs" id="" type="text">
                         <button class="signUpBtn" onclick="signUpUser()">SIGN UP</button>
                     </div>
                 </div>
@@ -325,7 +325,7 @@
                     <input type="number" placeholder="투자금액">
                     <canvas id="canvas" width="500" height="300"></canvas>
                     <button class="buttonStyle" onclick="investFund()">투자</button>
-                    <button class="buttonStyle" onclick="closePopupSection('#investPage')">취소</button>
+                    <button class="buttonStyle" onclick="OffInvestPage()">취소</button>
                 </div>
             </div>
         </section>
@@ -333,7 +333,7 @@
         <section id="detailView" class="fundBtns">
             <div id="darkPage">
                 <div id="detailVContents">
-                    <div id="offBtn" onclick="closePopupSection('#detailView')">X</div>
+                    <div id="offBtn" onclick="OffDetailView()">X</div>
                     <div class="detailVTexts" id="detailVNumber">A0495</div>
                     <div class="detailVTexts" id="detailVTitle">환경 친화적인 비닐개발</div>
 
@@ -364,10 +364,10 @@
         <section id="profile" class="fundBtns">
             <div id="darkPage">
                 <div id="loginText">
-                    <div id="offBtn" onclick="closePopupSection('#profile')">X</div>
+                    <div id="offBtn" onclick="offProFile()">X</div>
                     <div id="leftProfile">
                         <div id="dark3"></div>
-                        <div id="profileBody">
+                        <div id="">
                             <div id="profileImg"></div>
                             <div class="proUserInfo">Email</div>
                             <div class="proUserInfo">name</div>

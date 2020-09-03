@@ -9,7 +9,7 @@
 
   $email = isset($_GET['email']) ? $_GET['email'] : null;
 
-  $query = "select * from fund where creator = ?";
+  $query = "select * from fundweb_fund where creator = ?";
 
   $fund = fetch($con, $query , [$email]);
 

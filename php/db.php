@@ -1,7 +1,8 @@
 <?php
   session_start();
-  $dsn = "mysql:host=localhost;dbname=test;charset=utf8";
-  $con = new PDO($dsn, "root");
+$dsn = "mysql:host=gondr.asuscomm.com;dbname=yy_10107;charset=utf8mb4";
+
+$con = new PDO($dsn, "yy_10107", 'jj7323751');
 
   function fetch($con, $sql, $params = []) {
     $p = $con->prepare($sql);
